@@ -1,8 +1,7 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { ProjectList } from "@/components/project-list";
-import { RequestPath } from "@/components/request-path";
+import { Hero } from "@/components/ui/hero-1";
 import { getSiteContent } from "@/content/site";
 import { isLocale } from "@/lib/i18n";
 import { createLocalizedMetadata } from "@/lib/metadata";
@@ -22,19 +21,14 @@ export default async function HomePage({ params }: HomePageProps) {
   const content = getSiteContent(locale);
 
   return (
-    <div className="page-frame">
-      <section className="hero">
-        <div className="hero-copy">
-          <h1>{content.home.headline}</h1>
-          <p className="hero-intro">{content.home.intro}</p>
-          <div className="actions">
-            <Link className="button button-primary" href={content.home.primaryAction.href}>{content.home.primaryAction.label}</Link>
-            <Link className="button" href={content.home.demoAction.href}>{content.home.demoAction.label}</Link>
-            <Link className="button" href={content.home.contactAction.href}>{content.home.contactAction.label}</Link>
-          </div>
-        </div>
-        <RequestPath content={content.home.requestPath} />
-      </section>
+    <div className="page-frame home-page">
+      <Hero
+        eyebrow={`${content.person.location} · ${content.person.role}`}
+        title={content.home.headline}
+        subtitle={content.home.intro}
+        ctaLabel={content.home.primaryAction.label}
+        ctaHref={content.home.primaryAction.href}
+      />
 
       <section className="section" aria-labelledby="selected-work">
         <div className="section-heading">

@@ -29,6 +29,8 @@ def run_desktop_flow(page: Page) -> None:
 
     page.goto(f"{BASE_URL}/en", wait_until="networkidle")
     page.get_by_role("heading", name="I turn complex ideas into useful web products.").wait_for()
+    page.get_by_role("link", name="View projects").wait_for()
+    page.screenshot(path=ARTIFACTS / "desktop-home.png", full_page=True)
     page.keyboard.press("Tab")
     assert page.locator(":focus").get_attribute("href") == "#main-content"
     page.get_by_role("link", name="View projects").click()
@@ -55,6 +57,7 @@ def run_desktop_flow(page: Page) -> None:
 def run_mobile_flow(page: Page) -> None:
     page.goto(f"{BASE_URL}/de", wait_until="networkidle")
     page.get_by_role("heading", name="Ich mache aus komplexen Ideen nützliche Webprodukte.").wait_for()
+    page.screenshot(path=ARTIFACTS / "mobile-hero.png", full_page=False)
     page.get_by_role("button", name="Menü öffnen").click()
     page.get_by_role("link", name="Projekte", exact=True).wait_for()
     page.screenshot(path=ARTIFACTS / "mobile-home.png", full_page=True)
