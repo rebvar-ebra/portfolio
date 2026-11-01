@@ -32,8 +32,8 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         <div><span className="section-label">{copy.label}</span><h1>{copy.title}</h1><p>{copy.summary}</p></div>
         <dl className="case-meta">
           <dt>{content.common.technologies}</dt><dd>{definition.technologies.join(", ")}</dd>
-          <dt>Type</dt><dd>{copy.label}</dd>
-          <dt>Links</dt><dd>{definition.liveUrl ? <Link className="text-link" href={`/${locale}${definition.liveUrl}`}>{content.common.liveDemo}</Link> : content.common.sourceUnavailable}</dd>
+          <dt>{content.common.typeLabel}</dt><dd>{copy.label}</dd>
+          <dt>{content.common.linksLabel}</dt><dd>{definition.liveUrl ? <Link className="text-link" href={`/${locale}${definition.liveUrl}`}>{content.common.liveDemo}</Link> : content.common.sourceUnavailable}</dd>
         </dl>
       </header>
       <div className="case-body">

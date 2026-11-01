@@ -10,5 +10,8 @@ test-results/
 .DS_Store
 .superpowers/
 .worktrees/
+.venv/
+.e2e-deps/
+artifacts/
 web/.next/
 api/portfolio-api

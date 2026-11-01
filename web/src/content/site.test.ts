@@ -44,4 +44,12 @@ describe("portfolio content", () => {
     expect(scanProject?.publicSafe).toBe(true);
     expect(scanProject?.hasConfidentialSource).toBe(true);
   });
+
+  it("localizes the request path and approach labels instead of mixing languages", () => {
+    const content = getSiteContent("de");
+
+    expect(content.home.requestPath.title).toBe("Ein sichtbarer Datenfluss");
+    expect(content.home.requestPath.nodes[0].title).toBe("Oberfläche");
+    expect(content.home.approachSteps[0].title).toBe("Die tatsächliche Aufgabe verstehen");
+  });
 });

@@ -23,12 +23,12 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             <Link className="button" href={content.home.contactAction.href}>{content.home.contactAction.label}</Link>
           </div>
         </div>
-        <RequestPath />
+        <RequestPath content={content.home.requestPath} />
       </section>
 
       <section className="section" aria-labelledby="selected-work">
         <div className="section-heading">
-          <span className="section-label">Work index</span>
+          <span className="section-label">{content.home.workLabel}</span>
           <h2 id="selected-work">{content.home.selectedWork}</h2>
         </div>
         <ProjectList content={content} />
@@ -36,13 +36,13 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
 
       <section className="section" aria-labelledby="approach-title">
         <div className="section-heading">
-          <span className="section-label">Method</span>
+          <span className="section-label">{content.home.methodLabel}</span>
           <h2 id="approach-title">{content.home.approachTitle}</h2>
         </div>
         <div className="approach-grid">
-          <article className="approach-step"><span>Input</span><h3>Understand the real job</h3><p>{content.home.approach}</p></article>
-          <article className="approach-step"><span>Flow</span><h3>Make the system legible</h3><p>{content.person.introduction}</p></article>
-          <article className="approach-step"><span>Proof</span><h3>Test the path that matters</h3><p>{content.lab.intro}</p></article>
+          {content.home.approachSteps.map((step) => (
+            <article className="approach-step" key={step.phase}><span>{step.phase}</span><h3>{step.title}</h3><p>{step.body}</p></article>
+          ))}
         </div>
       </section>
     </div>

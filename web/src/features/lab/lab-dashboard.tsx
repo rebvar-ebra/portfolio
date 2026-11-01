@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
+import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import type { SiteContent } from "@/content/site";
 import { createOrder, listOrders, updateOrderStatus } from "./api-client";
@@ -20,6 +20,8 @@ export function LabDashboard({ content }: { content: SiteContent["lab"] }) {
   const [connection, setConnection] = useState<ConnectionState>("connecting");
   const [item, setItem] = useState("");
   const [quantity, setQuantity] = useState(1);
+  const itemInput = useRef<HTMLInputElement>(null);
+  const quantityInput = useRef<HTMLInputElement>(null);
 
   const loadOrders = useCallback(async () => {
     try {
@@ -48,7 +50,7 @@ export function LabDashboard({ content }: { content: SiteContent["lab"] }) {
         if (isActive) setIsLoading(false);
       });
     const events = new EventSource("/api/events");
-    events.addEventListener("connected", () => setConnection("live"));
+    events.onopen = () => setConnection("live");
     events.addEventListener("orders-changed", () => void loadOrders());
     events.onerror = () => setConnection("reconnecting");
     return () => {
@@ -65,6 +67,8 @@ export function LabDashboard({ content }: { content: SiteContent["lab"] }) {
     const validation = validateOrderDraft({ item, quantity });
     if (!validation.valid) {
       setFormError(validation.reason === "item" ? content.itemError : content.quantityError);
+      if (validation.reason === "item") itemInput.current?.focus();
+      else quantityInput.current?.focus();
       return;
     }
 
@@ -117,9 +121,9 @@ export function LabDashboard({ content }: { content: SiteContent["lab"] }) {
         <form className="order-form" onSubmit={submitOrder} noValidate>
           <h2>{content.createTitle}</h2>
           <label htmlFor="order-item">{content.itemLabel}</label>
-          <input id="order-item" name="item" value={item} onChange={(event) => setItem(event.target.value)} placeholder={content.itemPlaceholder} maxLength={80} aria-describedby={formError ? "order-form-error" : undefined} />
+          <input ref={itemInput} id="order-item" name="item" value={item} onChange={(event) => setItem(event.target.value)} placeholder={content.itemPlaceholder} maxLength={80} autoComplete="off" aria-invalid={formError === content.itemError} aria-describedby={formError ? "order-form-error" : undefined} />
           <label htmlFor="order-quantity">{content.quantityLabel}</label>
-          <input id="order-quantity" name="quantity" type="number" inputMode="numeric" min={1} max={20} value={quantity} onChange={(event) => setQuantity(Number(event.target.value))} />
+          <input ref={quantityInput} id="order-quantity" name="quantity" type="number" inputMode="numeric" min={1} max={20} value={quantity} onChange={(event) => setQuantity(Number(event.target.value))} autoComplete="off" aria-invalid={formError === content.quantityError} />
           {formError ? <p className="form-error" id="order-form-error" role="alert">{formError}</p> : null}
           <button className="button button-primary" type="submit" disabled={isCreating}>{isCreating ? content.creatingAction : content.createAction}</button>
         </form>
@@ -149,7 +153,7 @@ export function LabDashboard({ content }: { content: SiteContent["lab"] }) {
                     <button className="button order-action" type="button" disabled={pendingOrderID === order.id} onClick={() => void advanceOrder(order)}>
                       {content.nextActions[order.status as Exclude<OrderStatus, "ready">]}
                     </button>
-                  ) : <span className="order-complete" aria-label={content.statusLabels.ready}>✓</span>}
+                  ) : <span className="order-complete"><span aria-hidden="true">✓</span><span className="sr-only">{content.statusLabels.ready}</span></span>}
                 </article>
               );
             })}

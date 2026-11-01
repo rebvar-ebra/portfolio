@@ -1,0 +1,11 @@
+.git
+.github
+.next
+.superpowers
+.venv
+.e2e-deps
+artifacts
+node_modules
+web/.next
+web/node_modules
+*.log

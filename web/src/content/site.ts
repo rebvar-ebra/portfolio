@@ -85,6 +85,13 @@ export type SiteContent = {
     approachTitle: string;
     approach: string;
     selectedWork: string;
+    workLabel: string;
+    methodLabel: string;
+    requestPath: {
+      title: string;
+      nodes: readonly { index: string; title: string; description: string }[];
+    };
+    approachSteps: readonly { phase: string; title: string; body: string }[];
   };
   common: {
     viewProject: string;
@@ -103,6 +110,8 @@ export type SiteContent = {
     learned: string;
     liveDemo: string;
     sourceUnavailable: string;
+    typeLabel: string;
+    linksLabel: string;
   };
   projectsPage: { title: string; intro: string };
   about: {
@@ -187,6 +196,21 @@ const englishContent: SiteContent = {
     approach:
       "I start with the person using the product, make the data flow explicit, and keep each layer understandable enough to change safely.",
     selectedWork: "Selected work",
+    workLabel: "Work index",
+    methodLabel: "Method",
+    requestPath: {
+      title: "A request, made visible",
+      nodes: [
+        { index: "01", title: "Interface", description: "Intent becomes structured input" },
+        { index: "02", title: "API", description: "Rules validate and coordinate" },
+        { index: "03", title: "Data", description: "State changes, then flows back" },
+      ],
+    },
+    approachSteps: [
+      { phase: "Input", title: "Understand the real job", body: "Start with the person using the product and the outcome they need." },
+      { phase: "Flow", title: "Make the system legible", body: "Keep the interface, service boundaries, and data movement clear enough to change safely." },
+      { phase: "Proof", title: "Test the path that matters", body: "Verify the real user journey and the failure states around it." },
+    ],
   },
   common: {
     viewProject: "Read case study",
@@ -205,6 +229,8 @@ const englishContent: SiteContent = {
     learned: "What I learned",
     liveDemo: "Open live demo",
     sourceUnavailable: "Repository link not yet provided",
+    typeLabel: "Type",
+    linksLabel: "Links",
   },
   projectsPage: {
     title: "Work, decisions, and what I learned.",
@@ -241,7 +267,7 @@ const englishContent: SiteContent = {
     fictionalNotice: "Demo only. All names and orders are fictional; no payment or customer data is collected.",
     createTitle: "Add a fictional order",
     itemLabel: "Menu item",
-    itemPlaceholder: "e.g. Charred tomato gnocchi",
+    itemPlaceholder: "e.g. Charred tomato gnocchi…",
     quantityLabel: "Quantity",
     createAction: "Create order",
     creatingAction: "Creating order…",
@@ -335,6 +361,21 @@ const germanContent: SiteContent = {
     approach:
       "Ich beginne bei den Menschen, die das Produkt nutzen, mache Datenflüsse sichtbar und halte jede Schicht so verständlich, dass sie sicher verändert werden kann.",
     selectedWork: "Ausgewählte Projekte",
+    workLabel: "Projektübersicht",
+    methodLabel: "Arbeitsweise",
+    requestPath: {
+      title: "Ein sichtbarer Datenfluss",
+      nodes: [
+        { index: "01", title: "Oberfläche", description: "Absicht wird zu strukturierter Eingabe" },
+        { index: "02", title: "API", description: "Regeln prüfen und koordinieren" },
+        { index: "03", title: "Daten", description: "Der Zustand ändert sich und fließt zurück" },
+      ],
+    },
+    approachSteps: [
+      { phase: "Eingabe", title: "Die tatsächliche Aufgabe verstehen", body: "Ausgangspunkt sind die Menschen, die das Produkt nutzen, und das Ergebnis, das sie benötigen." },
+      { phase: "Ablauf", title: "Das System verständlich machen", body: "Oberfläche, Dienstgrenzen und Datenfluss bleiben so klar, dass sie sicher verändert werden können." },
+      { phase: "Nachweis", title: "Den entscheidenden Weg testen", body: "Der echte Nutzungspfad und seine Fehlerzustände werden überprüft." },
+    ],
   },
   common: {
     viewProject: "Fallstudie lesen",
@@ -353,6 +394,8 @@ const germanContent: SiteContent = {
     learned: "Was ich gelernt habe",
     liveDemo: "Live-Demo öffnen",
     sourceUnavailable: "Repository-Link noch nicht vorhanden",
+    typeLabel: "Art",
+    linksLabel: "Links",
   },
   projectsPage: {
     title: "Arbeit, Entscheidungen und Erkenntnisse.",
@@ -389,7 +432,7 @@ const germanContent: SiteContent = {
     fictionalNotice: "Nur eine Demo. Alle Namen und Bestellungen sind fiktiv; Zahlungs- oder Kundendaten werden nicht erfasst.",
     createTitle: "Fiktive Bestellung hinzufügen",
     itemLabel: "Gericht",
-    itemPlaceholder: "z. B. Gnocchi mit geschmorten Tomaten",
+    itemPlaceholder: "z. B. Gnocchi mit geschmorten Tomaten…",
     quantityLabel: "Anzahl",
     createAction: "Bestellung anlegen",
     creatingAction: "Bestellung wird angelegt…",
