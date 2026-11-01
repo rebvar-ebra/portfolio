@@ -15,3 +15,4 @@ test-results/
 artifacts/
 web/.next/
 api/portfolio-api
+docs
