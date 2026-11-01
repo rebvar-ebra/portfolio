@@ -1,0 +1,13 @@
+.env
+.env.local
+.next/
+node_modules/
+coverage/
+playwright-report/
+test-results/
+*.log
+.DS_Store
+.superpowers/
+.worktrees/
+web/.next/
+api/portfolio-api
