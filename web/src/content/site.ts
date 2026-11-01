@@ -51,6 +51,33 @@ type NavigationItem = {
   href: string;
 };
 
+type ExperienceEntry = {
+  role: string;
+  company: string;
+  period: string;
+  location: string;
+  highlights: readonly string[];
+};
+
+type EducationEntry = {
+  degree: string;
+  institution: string;
+  period: string;
+  location: string;
+  detail: string | null;
+};
+
+type LanguageEntry = {
+  name: string;
+  level: string;
+  proficiency: "Native" | "C1" | "B2";
+};
+
+type CertificationEntry = {
+  name: string;
+  href: string;
+};
+
 export type ProjectCopy = {
   slug: ProjectDefinition["slug"];
   title: string;
@@ -72,11 +99,10 @@ export type SiteContent = {
     name: "Rebvar Ebrahimi";
     role: string;
     location: string;
-    email: null;
+    email: string;
     github: null;
-    linkedin: null;
+    linkedin: string;
     resume: null;
-    education: string;
     introduction: string;
   };
   navigation: readonly NavigationItem[];
@@ -119,19 +145,30 @@ export type SiteContent = {
   };
   projectsPage: { title: string; intro: string };
   about: {
+    label: string;
     title: string;
     intro: string;
+    experienceTitle: string;
     educationTitle: string;
     skillsTitle: string;
+    languagesTitle: string;
+    certificationsTitle: string;
     learningTitle: string;
     learning: string;
+    experience: readonly ExperienceEntry[];
+    education: readonly EducationEntry[];
+    languages: readonly LanguageEntry[];
+    certifications: readonly CertificationEntry[];
     skills: readonly { group: string; items: readonly string[] }[];
   };
   contact: {
+    label: string;
     title: string;
     intro: string;
-    placeholderTitle: string;
-    placeholder: string;
+    directTitle: string;
+    emailLabel: string;
+    linkedinLabel: string;
+    note: string;
   };
   lab: {
     title: string;
@@ -165,9 +202,9 @@ const route = (locale: Locale, path = "") => `/${locale}${path}`;
 
 const sharedPerson = {
   name: "Rebvar Ebrahimi" as const,
-  email: null,
+  email: "rebvar.ebrahimy@gmail.com",
   github: null,
-  linkedin: null,
+  linkedin: "https://linkedin.com/in/rebvar-ebrahimi",
   resume: null,
 };
 
@@ -178,9 +215,8 @@ const englishContent: SiteContent = {
     ...sharedPerson,
     role: "Full-Stack Developer",
     location: "Berlin, Germany",
-    education: "MSc in Computer Science, University of Szeged",
     introduction:
-      "I build useful web products across the interface, API, and data layer. My work combines careful product thinking with dependable implementation.",
+      "Full-stack developer in Berlin with experience across React interfaces, Node.js and Python services, CI/CD, container delivery, and IT operations.",
   },
   navigation: [
     { label: "Home", href: route("en") },
@@ -242,27 +278,95 @@ const englishContent: SiteContent = {
       "Three projects at different stages: professional product work, a working full-stack demo, and a Go learning project.",
   },
   about: {
-    title: "A product-minded developer across the stack.",
+    label: "Profile",
+    title: "Software development from interface to infrastructure.",
     intro:
-      "I’m a full-stack developer based in Berlin with an MSc in Computer Science from the University of Szeged. I enjoy turning unclear requirements into small, testable systems.",
+      "I’m a detail-oriented full-stack developer based in Berlin. My experience spans an AI-assisted 3D reconstruction platform, solar-planning interfaces, CI/CD and container delivery, and hands-on IT administration.",
+    experienceTitle: "Professional experience",
     educationTitle: "Education",
     skillsTitle: "Technical range",
-    learningTitle: "Currently learning",
+    languagesTitle: "Languages",
+    certificationsTitle: "Certifications",
+    learningTitle: "Current focus",
     learning:
-      "I’m learning Go by building small services and studying how explicit interfaces and simple concurrency shape reliable backends.",
+      "I’m deepening my Go and backend engineering practice through small services, explicit interfaces, and production-minded testing.",
+    experience: [
+      {
+        role: "Full-Stack Developer Intern",
+        company: "Think3ddd",
+        period: "Nov 2025 – Feb 2026",
+        location: "Berlin, Germany",
+        highlights: [
+          "Developed and maintained a React, Node.js, and Python platform for AI-assisted 3D reconstruction of medical image data.",
+          "Implemented Jenkins and GitLab CI/CD pipelines with automated testing and deployment workflows.",
+          "Built and operated Dockerized applications on Cloudron and integrated Nextcloud, LDAP, and WebDAV.",
+          "Investigated failures and improved performance across the React frontend, Node.js backend, and Python microservices.",
+        ],
+      },
+      {
+        role: "IT Administrator (Federal Volunteer Service)",
+        company: "KJFE-Schabracke",
+        period: "Sep 2024 – Nov 2025",
+        location: "Berlin, Germany",
+        highlights: [
+          "Redesigned and maintained the organization’s PHP and Tailwind CSS website.",
+          "Administered IT systems to support stable day-to-day operations.",
+          "Supported software adoption and trained colleagues in effective use of new tools.",
+        ],
+      },
+      {
+        role: "Full-Stack Developer",
+        company: "AI-nergy",
+        period: "Dec 2022 – Jun 2023",
+        location: "Copenhagen, Denmark",
+        highlights: [
+          "Built interactive Google Maps API components for the SolarPlanner application.",
+          "Improved React interfaces for responsive, performant visualization of energy-generation data.",
+          "Worked with an interdisciplinary team to translate product requirements into frontend features.",
+        ],
+      },
+    ],
+    education: [
+      {
+        degree: "MSc in Computer Science",
+        institution: "University of Szeged",
+        period: "Feb 2021 – Feb 2023",
+        location: "Szeged, Hungary",
+        detail: "Thesis: pBFT deployment in FoBSim and comparison with other blockchain consensus algorithms.",
+      },
+      {
+        degree: "BSc in Computer Science",
+        institution: "Azad University",
+        period: "Sep 2012 – Jun 2014",
+        location: "Mahabad, Iran",
+        detail: null,
+      },
+    ],
+    languages: [
+      { name: "Kurdish", level: "Native", proficiency: "Native" },
+      { name: "Persian", level: "Native", proficiency: "Native" },
+      { name: "English", level: "C1 · Fluent", proficiency: "C1" },
+      { name: "German", level: "B2", proficiency: "B2" },
+    ],
+    certifications: [
+      { name: "DevOps on AWS: Code, Build, and Test", href: "https://www.coursera.org/account/accomplishments/certificate/XQXNFU9UA8TZ" },
+      { name: "Python Project for AI & Application Development", href: "https://www.coursera.org/account/accomplishments/certificate/GQ8N76YZW2ZM" },
+    ],
     skills: [
-      { group: "Interface", items: ["JavaScript", "TypeScript", "React", "Next.js"] },
-      { group: "Services", items: ["Node.js", "Python", "FastAPI", "Go (learning)"] },
-      { group: "Data & delivery", items: ["MongoDB", "PostgreSQL", "Docker"] },
+      { group: "Interface", items: ["JavaScript", "React", "HTML", "CSS", "Tailwind CSS", "Google Maps API"] },
+      { group: "Services & systems", items: ["Node.js", "Python", "PHP", "SQL", "LDAP", "WebDAV", "Nextcloud"] },
+      { group: "Delivery", items: ["Docker", "Jenkins", "GitLab CI/CD", "Cloudron", "Version control", "Agile"] },
     ],
   },
   contact: {
+    label: "Contact",
     title: "Let’s talk about useful software.",
     intro:
-      "A verified email address and professional profile links have not been provided yet, so this site does not invent them or send form data anywhere.",
-    placeholderTitle: "Contact details are being prepared",
-    placeholder:
-      "Add a public email address, LinkedIn URL, GitHub URL, and résumé link in the content file before launch.",
+      "I’m based in Berlin and open to full-stack and frontend opportunities. The quickest way to reach me is by email.",
+    directTitle: "Professional channels",
+    emailLabel: "Email",
+    linkedinLabel: "LinkedIn",
+    note: "This site does not publish my phone number or street address and does not send form data to a third party.",
   },
   lab: {
     title: "Restaurant operations, from order to ready.",
@@ -293,15 +397,15 @@ const englishContent: SiteContent = {
     {
       slug: "3d-scan-platform",
       title: "3D Scan Platform",
-      label: "Public-safe reconstruction",
-      summary: "A platform workflow connecting scan-related interfaces, services, and file collaboration.",
-      problem: "3D scanning workflows cross multiple technical systems and need a coherent interface for complex processing steps.",
-      role: "Rebvar contributed across React, Node.js, Python/FastAPI, and Nextcloud parts of the platform. Employer, dates, and confidential implementation details are intentionally omitted.",
-      solution: "This case study reconstructs the system shape with neutral diagrams and public-safe descriptions rather than private screens or source code.",
-      decisions: ["Separate user-facing progress from backend processing details.", "Keep service boundaries visible so failures can be traced.", "Use Nextcloud as part of the file collaboration workflow."],
-      challenges: ["Representing long-running technical work clearly.", "Coordinating JavaScript and Python service boundaries.", "Explaining the work without exposing confidential material."],
-      learning: "Complex technical products become easier to operate when progress, ownership, and failure states are explicit.",
-      disclosure: "Conceptual reconstruction. No confidential data, screenshots, metrics, or source code are shown.",
+      label: "Think3ddd · Professional work",
+      summary: "A React, Node.js, and Python platform supporting AI-assisted 3D reconstruction of medical image data.",
+      problem: "The platform connects a React interface, Node.js backend, Python microservices, and external file and identity services in a distributed medical-imaging workflow.",
+      role: "Full-Stack Developer Intern at Think3ddd in Berlin from November 2025 to February 2026, contributing across frontend, backend, delivery, integrations, troubleshooting, and technical documentation.",
+      solution: "The team operated containerized services with Docker and Cloudron, automated test and deployment workflows with Jenkins and GitLab, and integrated Nextcloud, LDAP, and WebDAV for file collaboration, identity, and secure data transfer.",
+      decisions: ["Use React, Node.js, and Python across the platform’s interface and service layers.", "Automate testing and deployment through Jenkins and GitLab CI/CD.", "Connect Nextcloud, LDAP, and WebDAV to the wider platform workflow."],
+      challenges: ["Tracing failures across a React frontend, Node.js backend, and Python microservices.", "Improving performance in a distributed system.", "Documenting complex architecture while keeping confidential implementation details private."],
+      learning: "The role strengthened my experience in full-stack delivery, service integration, container operations, and collaborative architecture work.",
+      disclosure: "CV-verified role and technology summary. No confidential data, private screens, metrics, or source code are shown.",
     },
     {
       slug: "restaurant-operations",
@@ -343,9 +447,8 @@ const germanContent: SiteContent = {
     ...sharedPerson,
     role: "Full-Stack-Entwickler",
     location: "Berlin, Deutschland",
-    education: "MSc in Informatik, Universität Szeged",
     introduction:
-      "Ich entwickle nützliche Webprodukte – von der Benutzeroberfläche über die API bis zur Datenschicht. Dabei verbinde ich Produktdenken mit einer verlässlichen Umsetzung.",
+      "Full-Stack-Entwickler in Berlin mit Erfahrung in React-Oberflächen, Node.js- und Python-Diensten, CI/CD, Container-Betrieb und IT-Administration.",
   },
   navigation: [
     { label: "Start", href: route("de") },
@@ -407,27 +510,95 @@ const germanContent: SiteContent = {
       "Drei Projekte in unterschiedlichen Phasen: professionelle Produktarbeit, eine funktionierende Full-Stack-Demo und ein Go-Lernprojekt.",
   },
   about: {
-    title: "Produktorientierte Entwicklung über den gesamten Stack.",
+    label: "Profil",
+    title: "Softwareentwicklung von der Oberfläche bis zur Infrastruktur.",
     intro:
-      "Ich bin Full-Stack-Entwickler in Berlin und habe einen MSc in Informatik von der Universität Szeged. Unklare Anforderungen übersetze ich gern in kleine, testbare Systeme.",
+      "Ich bin ein detailorientierter Full-Stack-Entwickler in Berlin. Meine Erfahrung reicht von einer KI-gestützten 3D-Rekonstruktionsplattform und Solarplanungs-Oberflächen bis zu CI/CD, Container-Betrieb und praktischer IT-Administration.",
+    experienceTitle: "Berufserfahrung",
     educationTitle: "Ausbildung",
     skillsTitle: "Technischer Schwerpunkt",
-    learningTitle: "Aktuell lerne ich",
+    languagesTitle: "Sprachen",
+    certificationsTitle: "Zertifizierungen",
+    learningTitle: "Aktueller Schwerpunkt",
     learning:
-      "Ich lerne Go, indem ich kleine Dienste entwickle und untersuche, wie klare Schnittstellen und einfache Nebenläufigkeit zu verlässlichen Backends beitragen.",
+      "Ich vertiefe Go und Backend-Engineering durch kleine Dienste, klare Schnittstellen und produktionsnahe Tests.",
+    experience: [
+      {
+        role: "Praktikum als Full-Stack-Entwickler",
+        company: "Think3ddd",
+        period: "Nov. 2025 – Feb. 2026",
+        location: "Berlin, Deutschland",
+        highlights: [
+          "Entwicklung und Wartung einer Plattform mit React, Node.js und Python für die KI-gestützte 3D-Rekonstruktion medizinischer Bilddaten.",
+          "Aufbau von Jenkins- und GitLab-CI/CD-Pipelines mit automatisierten Tests und Deployment-Abläufen.",
+          "Betrieb containerisierter Anwendungen mit Docker auf Cloudron sowie Integration von Nextcloud, LDAP und WebDAV.",
+          "Fehleranalyse und Performance-Optimierung im React-Frontend, Node.js-Backend und in Python-Microservices.",
+        ],
+      },
+      {
+        role: "IT-Administrator (Bundesfreiwilligendienst)",
+        company: "KJFE-Schabracke",
+        period: "Sept. 2024 – Nov. 2025",
+        location: "Berlin, Deutschland",
+        highlights: [
+          "Neugestaltung und Pflege der Website mit PHP und Tailwind CSS.",
+          "Verwaltung und Wartung der IT-Systeme für einen stabilen täglichen Betrieb.",
+          "Unterstützung bei der Einführung neuer Software und Schulung von Mitarbeitenden.",
+        ],
+      },
+      {
+        role: "Full-Stack-Entwickler",
+        company: "AI-nergy",
+        period: "Dez. 2022 – Juni 2023",
+        location: "Kopenhagen, Dänemark",
+        highlights: [
+          "Entwicklung interaktiver Google-Maps-API-Komponenten für die SolarPlanner-Anwendung.",
+          "Optimierung von React-Oberflächen zur responsiven und performanten Darstellung von Energieerzeugungsdaten.",
+          "Zusammenarbeit mit einem interdisziplinären Team bei der Umsetzung technischer Anforderungen.",
+        ],
+      },
+    ],
+    education: [
+      {
+        degree: "MSc Computer Science",
+        institution: "Universität Szeged",
+        period: "Feb. 2021 – Feb. 2023",
+        location: "Szeged, Ungarn",
+        detail: "Abschlussarbeit: pBFT-Deployment in FoBSim und Vergleich mit anderen Blockchain-Konsensalgorithmen.",
+      },
+      {
+        degree: "BSc Computer Science",
+        institution: "Azad Universität",
+        period: "Sept. 2012 – Juni 2014",
+        location: "Mahabad, Iran",
+        detail: null,
+      },
+    ],
+    languages: [
+      { name: "Kurdisch", level: "Muttersprache", proficiency: "Native" },
+      { name: "Persisch", level: "Muttersprache", proficiency: "Native" },
+      { name: "Englisch", level: "C1 · Fließend", proficiency: "C1" },
+      { name: "Deutsch", level: "B2", proficiency: "B2" },
+    ],
+    certifications: [
+      { name: "DevOps on AWS: Code, Build, and Test", href: "https://www.coursera.org/account/accomplishments/certificate/XQXNFU9UA8TZ" },
+      { name: "Python Project for AI & Application Development", href: "https://www.coursera.org/account/accomplishments/certificate/GQ8N76YZW2ZM" },
+    ],
     skills: [
-      { group: "Oberfläche", items: ["JavaScript", "TypeScript", "React", "Next.js"] },
-      { group: "Dienste", items: ["Node.js", "Python", "FastAPI", "Go (in Weiterbildung)"] },
-      { group: "Daten & Betrieb", items: ["MongoDB", "PostgreSQL", "Docker"] },
+      { group: "Oberfläche", items: ["JavaScript", "React", "HTML", "CSS", "Tailwind CSS", "Google Maps API"] },
+      { group: "Dienste & Systeme", items: ["Node.js", "Python", "PHP", "SQL", "LDAP", "WebDAV", "Nextcloud"] },
+      { group: "Bereitstellung", items: ["Docker", "Jenkins", "GitLab CI/CD", "Cloudron", "Versionsverwaltung", "Agile"] },
     ],
   },
   contact: {
+    label: "Kontakt",
     title: "Sprechen wir über nützliche Software.",
     intro:
-      "Eine bestätigte E-Mail-Adresse und berufliche Profil-Links liegen noch nicht vor. Deshalb erfindet diese Website keine Kontaktdaten und versendet keine Formulardaten.",
-    placeholderTitle: "Kontaktdaten werden vorbereitet",
-    placeholder:
-      "Vor dem Start müssen eine öffentliche E-Mail-Adresse sowie LinkedIn-, GitHub- und Lebenslauf-Links in der Inhaltsdatei ergänzt werden.",
+      "Ich lebe in Berlin und bin offen für Full-Stack- und Frontend-Möglichkeiten. Am schnellsten bin ich per E-Mail erreichbar.",
+    directTitle: "Berufliche Kontaktwege",
+    emailLabel: "E-Mail",
+    linkedinLabel: "LinkedIn",
+    note: "Diese Website veröffentlicht weder meine Telefonnummer noch meine Straßenadresse und sendet keine Formulardaten an Dritte.",
   },
   lab: {
     title: "Restaurantabläufe – von der Bestellung bis zur Ausgabe.",
@@ -458,15 +629,15 @@ const germanContent: SiteContent = {
     {
       slug: "3d-scan-platform",
       title: "3D-Scan-Plattform",
-      label: "Öffentlich sichere Rekonstruktion",
-      summary: "Ein Plattformablauf, der Oberflächen, Dienste und Dateizusammenarbeit für Scan-Prozesse verbindet.",
-      problem: "3D-Scan-Abläufe führen durch mehrere technische Systeme und benötigen eine verständliche Oberfläche für komplexe Verarbeitungsschritte.",
-      role: "Rebvar arbeitete an Teilen der Plattform mit React, Node.js, Python/FastAPI und Nextcloud. Arbeitgeber, Zeitangaben und vertrauliche Details bleiben bewusst ungenannt.",
-      solution: "Diese Fallstudie rekonstruiert die Systemstruktur mit neutralen Diagrammen und öffentlich sicheren Beschreibungen statt mit privaten Ansichten oder Quellcode.",
-      decisions: ["Den sichtbaren Fortschritt von Backend-Details trennen.", "Dienstgrenzen sichtbar halten, damit Fehler nachvollziehbar bleiben.", "Nextcloud in die Dateizusammenarbeit einbinden."],
-      challenges: ["Lang laufende technische Arbeit verständlich darstellen.", "JavaScript- und Python-Dienste koordinieren.", "Die Arbeit ohne vertrauliches Material erklären."],
-      learning: "Komplexe technische Produkte werden leichter bedienbar, wenn Fortschritt, Zuständigkeit und Fehlerzustände klar sind.",
-      disclosure: "Konzeptionelle Rekonstruktion. Es werden keine vertraulichen Daten, Screenshots, Kennzahlen oder Quelltexte gezeigt.",
+      label: "Think3ddd · Berufserfahrung",
+      summary: "Eine Plattform mit React, Node.js und Python für die KI-gestützte 3D-Rekonstruktion medizinischer Bilddaten.",
+      problem: "Die Plattform verbindet eine React-Oberfläche, ein Node.js-Backend, Python-Microservices sowie externe Datei- und Identitätsdienste in einem verteilten medizinischen Bildverarbeitungsablauf.",
+      role: "Praktikum als Full-Stack-Entwickler bei Think3ddd in Berlin von November 2025 bis Februar 2026 mit Beiträgen zu Frontend, Backend, Bereitstellung, Integrationen, Fehleranalyse und technischer Dokumentation.",
+      solution: "Das Team betrieb containerisierte Dienste mit Docker und Cloudron, automatisierte Test- und Deployment-Abläufe mit Jenkins und GitLab und integrierte Nextcloud, LDAP und WebDAV für Dateizusammenarbeit, Identität und sichere Datenübertragung.",
+      decisions: ["React, Node.js und Python für die Oberflächen- und Dienstschichten einsetzen.", "Tests und Deployments mit Jenkins und GitLab CI/CD automatisieren.", "Nextcloud, LDAP und WebDAV in den Plattformablauf integrieren."],
+      challenges: ["Fehler über React-Frontend, Node.js-Backend und Python-Microservices hinweg analysieren.", "Performance in einem verteilten System verbessern.", "Komplexe Architektur dokumentieren und vertrauliche Umsetzungsdetails schützen."],
+      learning: "Die Tätigkeit vertiefte meine Erfahrung in Full-Stack-Bereitstellung, Dienstintegration, Container-Betrieb und gemeinsamer Architekturarbeit.",
+      disclosure: "Durch den Lebenslauf bestätigte Rolle und Technologieübersicht. Vertrauliche Daten, private Ansichten, Kennzahlen und Quellcode werden nicht gezeigt.",
     },
     {
       slug: "restaurant-operations",

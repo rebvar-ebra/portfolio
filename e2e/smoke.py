@@ -37,6 +37,21 @@ def run_desktop_flow(page: Page) -> None:
     page.wait_for_url("**/en/projects")
     page.get_by_role("heading", name="Work, decisions, and what I learned.").wait_for()
 
+    page.get_by_role("link", name="About", exact=True).click()
+    page.wait_for_url("**/en/about")
+    page.get_by_text("Think3ddd", exact=True).wait_for()
+    page.get_by_role("heading", name="Professional experience").wait_for()
+    detail_grid = page.locator(".content-grid").bounding_box()
+    final_detail = page.locator(".content-panel").last.bounding_box()
+    assert detail_grid and final_detail
+    assert abs(detail_grid["width"] - final_detail["width"]) <= 3, "final CV detail should span the full grid"
+    page.screenshot(path=ARTIFACTS / "desktop-about.png", full_page=True)
+
+    page.get_by_role("link", name="Contact", exact=True).click()
+    page.wait_for_url("**/en/contact")
+    page.get_by_role("link", name="rebvar.ebrahimy@gmail.com").wait_for()
+    page.screenshot(path=ARTIFACTS / "desktop-contact.png", full_page=True)
+
     page.get_by_role("link", name="Lab", exact=True).click()
     page.wait_for_url("**/en/lab")
     page.get_by_text("Live updates on").wait_for(timeout=15_000)

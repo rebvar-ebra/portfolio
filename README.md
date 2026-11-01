@@ -162,11 +162,10 @@ The script verifies desktop navigation, keyboard skip-link focus, order creation
 
 ## Information still needed before launch
 
-- Public contact email address.
-- Verified GitHub and LinkedIn URLs.
-- Public résumé URL or PDF.
+- Verified public GitHub URL.
+- A privacy-reviewed public résumé URL or PDF (the supplied CV contains a phone number and street address, so it is not copied into the public site).
 - Confirmed availability wording.
-- Employer, dates, role wording, screenshots, and any additional details explicitly approved for the 3D Scan Platform case study.
+- Screenshots and any additional details explicitly approved for the 3D Scan Platform case study.
 - Verified features, repository URL, and screenshots for the Go E-commerce learning project.
 - Repository URL for this portfolio, if it should be public.
 - Final legal notice/imprint and privacy wording appropriate to the operator and hosting setup.

@@ -27,13 +27,26 @@ describe("portfolio content", () => {
     expect(content.home.primaryAction.href).toBe(`/${locale}/projects`);
   });
 
-  it("keeps unverified links absent instead of fabricating URLs", () => {
+  it("publishes only CV-verified contact links", () => {
     const content = getSiteContent("en");
 
-    expect(content.person.email).toBeNull();
+    expect(content.person.email).toBe("rebvar.ebrahimy@gmail.com");
+    expect(content.person.linkedin).toBe("https://linkedin.com/in/rebvar-ebrahimi");
     expect(content.person.github).toBeNull();
-    expect(content.person.linkedin).toBeNull();
     expect(content.person.resume).toBeNull();
+  });
+
+  it.each(["en", "de"] as const)("includes the CV-backed career and qualifications in %s", (locale) => {
+    const content = getSiteContent(locale);
+
+    expect(content.about.experience).toHaveLength(3);
+    expect(content.about.experience[0].company).toBe("Think3ddd");
+    expect(content.about.education).toHaveLength(2);
+    expect(content.about.languages.map((language) => language.proficiency)).toEqual(["Native", "Native", "C1", "B2"]);
+    expect(content.about.certifications.map((certificate) => certificate.href)).toEqual([
+      "https://www.coursera.org/account/accomplishments/certificate/XQXNFU9UA8TZ",
+      "https://www.coursera.org/account/accomplishments/certificate/GQ8N76YZW2ZM",
+    ]);
   });
 
   it("marks the Go project as learning work and the 3D case study as reconstructed", () => {

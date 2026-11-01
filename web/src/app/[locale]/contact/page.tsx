@@ -20,8 +20,16 @@ export default async function ContactPage({ params }: ContactPageProps) {
 
   return (
     <div className="page-frame">
-      <header className="page-heading"><span className="section-label">Contact</span><div className="page-heading-copy"><h1>{content.contact.title}</h1><p>{content.contact.intro}</p></div></header>
-      <section className="placeholder-panel"><span className="section-label">{content.common.detailsNeeded}</span><h2>{content.contact.placeholderTitle}</h2><p>{content.contact.placeholder}</p></section>
+      <header className="page-heading"><span className="section-label">{content.contact.label}</span><div className="page-heading-copy"><h1>{content.contact.title}</h1><p>{content.contact.intro}</p></div></header>
+      <section className="contact-panel" aria-labelledby="contact-channels">
+        <span className="section-label">{content.person.location}</span>
+        <h2 id="contact-channels">{content.contact.directTitle}</h2>
+        <div className="contact-methods">
+          <a href={`mailto:${content.person.email}`}><span>{content.contact.emailLabel}</span><strong>{content.person.email}</strong></a>
+          <a href={content.person.linkedin} target="_blank" rel="noreferrer"><span>{content.contact.linkedinLabel}</span><strong>linkedin.com/in/rebvar-ebrahimi</strong></a>
+        </div>
+        <p className="contact-note">{content.contact.note}</p>
+      </section>
     </div>
   );
 }
