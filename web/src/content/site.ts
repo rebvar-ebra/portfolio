@@ -95,6 +95,14 @@ export type SiteContent = {
     skipToContent: string;
     menu: string;
     closeMenu: string;
+    problem: string;
+    role: string;
+    solution: string;
+    decisions: string;
+    challenges: string;
+    learned: string;
+    liveDemo: string;
+    sourceUnavailable: string;
   };
   projectsPage: { title: string; intro: string };
   about: {
@@ -170,6 +178,14 @@ const englishContent: SiteContent = {
     skipToContent: "Skip to content",
     menu: "Open menu",
     closeMenu: "Close menu",
+    problem: "The problem",
+    role: "Role and contribution",
+    solution: "The solution",
+    decisions: "Technical decisions",
+    challenges: "Challenges",
+    learned: "What I learned",
+    liveDemo: "Open live demo",
+    sourceUnavailable: "Repository link not yet provided",
   },
   projectsPage: {
     title: "Work, decisions, and what I learned.",
@@ -291,6 +307,14 @@ const germanContent: SiteContent = {
     skipToContent: "Zum Inhalt springen",
     menu: "Menü öffnen",
     closeMenu: "Menü schließen",
+    problem: "Das Problem",
+    role: "Rolle und Beitrag",
+    solution: "Die Lösung",
+    decisions: "Technische Entscheidungen",
+    challenges: "Herausforderungen",
+    learned: "Was ich gelernt habe",
+    liveDemo: "Live-Demo öffnen",
+    sourceUnavailable: "Repository-Link noch nicht vorhanden",
   },
   projectsPage: {
     title: "Arbeit, Entscheidungen und Erkenntnisse.",
