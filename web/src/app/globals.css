@@ -382,42 +382,9 @@ select {
   font-size: 0.75rem;
 }
 
-.project-list {
-  margin-top: 3rem;
-  border-top: 1px solid var(--line-strong);
-}
-
-.project-row {
-  display: grid;
-  grid-template-columns: 3fr 6fr 3fr;
-  gap: 2rem;
-  padding-block: 2rem;
-  border-bottom: 1px solid var(--line);
-  align-items: start;
-}
-
-.project-row:hover .project-title {
-  color: var(--signal-soft);
-}
-
-.project-kicker,
-.tech-list,
 .disclosure {
   color: var(--muted);
   font-size: 0.83rem;
-}
-
-.project-title {
-  margin: 0;
-  font-size: clamp(1.4rem, 2.8vw, 2.4rem);
-  line-height: 1.1;
-  letter-spacing: -0.035em;
-}
-
-.project-summary {
-  margin: 0.7rem 0 0;
-  max-width: 55ch;
-  color: var(--muted);
 }
 
 .text-link {
@@ -921,14 +888,6 @@ select {
     max-width: 620px;
   }
 
-  .project-row {
-    grid-template-columns: 1fr 2fr;
-  }
-
-  .project-row > :last-child {
-    grid-column: 2;
-  }
-
   .approach-grid,
   .content-grid {
     grid-template-columns: 1fr;
@@ -977,15 +936,6 @@ select {
   .section-heading h2,
   .page-heading-copy,
   .case-section > * {
-    grid-column: 1;
-  }
-
-  .project-row {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-
-  .project-row > :last-child {
     grid-column: 1;
   }
 

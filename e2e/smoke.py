@@ -37,7 +37,7 @@ def run_desktop_flow(page: Page) -> None:
     page.wait_for_url("**/en/projects")
     page.get_by_role("heading", name="Work, decisions, and what I learned.").wait_for()
 
-    page.get_by_role("link", name="Lab").click()
+    page.get_by_role("link", name="Lab", exact=True).click()
     page.wait_for_url("**/en/lab")
     page.get_by_text("Live updates on").wait_for(timeout=15_000)
     page.get_by_label("Menu item").fill("Charred tomato gnocchi")

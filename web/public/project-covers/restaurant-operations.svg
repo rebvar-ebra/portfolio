@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-labelledby="title desc">
+  <title id="title">Abstract restaurant operations board</title>
+  <desc id="desc">Order tickets progress from new to preparing and ready.</desc>
+  <rect width="1200" height="900" fill="#0d1a21"/>
+  <g stroke="#6fc7c2" stroke-opacity=".16"><path d="M0 180h1200M0 360h1200M0 540h1200M0 720h1200"/><path d="M240 0v900M480 0v900M720 0v900M960 0v900"/></g>
+  <path d="M165 675C300 560 382 610 505 485s235-60 340-185 170-75 230-155" fill="none" stroke="#6fc7c2" stroke-width="5" stroke-dasharray="14 16"/>
+  <g>
+    <g transform="translate(115 175) rotate(-5)"><rect width="260" height="350" rx="22" fill="#f2f0e8"/><rect x="30" y="42" width="80" height="18" fill="#ff6b35"/><path d="M30 105h200M30 150h150M30 195h190M30 270h90" stroke="#071016" stroke-width="12" stroke-linecap="round"/><circle cx="207" cy="285" r="25" fill="#6fc7c2"/></g>
+    <g transform="translate(470 260) rotate(3)"><rect width="260" height="350" rx="22" fill="#13232b" stroke="#6fc7c2" stroke-width="4"/><rect x="30" y="42" width="120" height="18" fill="#6fc7c2"/><path d="M30 105h200M30 150h150M30 195h190M30 270h90" stroke="#f2f0e8" stroke-opacity=".78" stroke-width="12" stroke-linecap="round"/><circle cx="207" cy="285" r="25" fill="#ff6b35"/></g>
+    <g transform="translate(820 135) rotate(-2)"><rect width="260" height="350" rx="22" fill="#071016" stroke="#ff6b35" stroke-width="4"/><rect x="30" y="42" width="78" height="18" fill="#ff6b35"/><path d="M30 105h200M30 150h150M30 195h190M30 270h90" stroke="#f2f0e8" stroke-opacity=".7" stroke-width="12" stroke-linecap="round"/><path d="M185 282l18 18 38-50" fill="none" stroke="#6fc7c2" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/></g>
+  </g>
+</svg>

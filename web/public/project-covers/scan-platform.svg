@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-labelledby="title desc">
+  <title id="title">Abstract 3D scan platform diagram</title>
+  <desc id="desc">A cyan point cloud passes through a service frame into stacked files.</desc>
+  <rect width="1200" height="900" fill="#0d1a21"/>
+  <g stroke="#6fc7c2" stroke-opacity=".18"><path d="M0 150h1200M0 300h1200M0 450h1200M0 600h1200M0 750h1200"/><path d="M150 0v900M300 0v900M450 0v900M600 0v900M750 0v900M900 0v900M1050 0v900"/></g>
+  <g fill="#6fc7c2">
+    <circle cx="185" cy="320" r="8"/><circle cx="240" cy="245" r="6"/><circle cx="300" cy="300" r="7"/><circle cx="352" cy="220" r="5"/><circle cx="390" cy="350" r="8"/><circle cx="245" cy="410" r="5"/><circle cx="335" cy="455" r="7"/><circle cx="175" cy="510" r="6"/><circle cx="420" cy="525" r="5"/>
+  </g>
+  <g fill="none" stroke="#6fc7c2" stroke-width="3" stroke-opacity=".72"><path d="M185 320l55-75 60 55 52-80 38 130-55 105-90-45-70 100 10-190z"/><rect x="500" y="215" width="245" height="400" rx="20"/><path d="M540 305h165M540 365h118M540 425h165M540 485h90"/></g>
+  <path d="M440 420h45" stroke="#ff6b35" stroke-width="12"/><path d="M470 398l24 22-24 22" fill="none" stroke="#ff6b35" stroke-width="8"/>
+  <g fill="#13232b" stroke="#f2f0e8" stroke-opacity=".7" stroke-width="3"><path d="M815 300h205l60 60v245H815z"/><path d="M845 255h205l60 60v245h-30V360l-60-60H845z" opacity=".65"/></g>
+  <circle cx="960" cy="470" r="46" fill="#ff6b35"/><path d="M940 470h40M960 450v40" stroke="#071016" stroke-width="8"/>
+</svg>

@@ -1,0 +1,17 @@
+import { renderToStaticMarkup } from "react-dom/server";
+import { describe, expect, it } from "vitest";
+
+import { getSiteContent } from "@/content/site";
+import { ProjectList } from "./project-list";
+
+describe("ProjectList", () => {
+  it("renders each case study as a visual card with a real localized destination", () => {
+    const markup = renderToStaticMarkup(<ProjectList content={getSiteContent("en")} />);
+
+    expect(markup.match(/data-slot="notched-project-card"/g)).toHaveLength(3);
+    expect(markup).toContain('href="/en/projects/3d-scan-platform"');
+    expect(markup).toContain('src="/project-covers/scan-platform.svg"');
+    expect(markup).toContain("3D Scan Platform");
+    expect(markup).toContain("React");
+  });
+});

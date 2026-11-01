@@ -10,6 +10,7 @@ export type ProjectDefinition = {
   hasConfidentialSource: boolean;
   liveUrl: string | null;
   repositoryUrl: string | null;
+  coverImage: string;
 };
 
 export const projects: readonly ProjectDefinition[] = [
@@ -21,6 +22,7 @@ export const projects: readonly ProjectDefinition[] = [
     hasConfidentialSource: true,
     liveUrl: null,
     repositoryUrl: null,
+    coverImage: "/project-covers/scan-platform.svg",
   },
   {
     slug: "restaurant-operations",
@@ -30,6 +32,7 @@ export const projects: readonly ProjectDefinition[] = [
     hasConfidentialSource: false,
     liveUrl: "/lab",
     repositoryUrl: null,
+    coverImage: "/project-covers/restaurant-operations.svg",
   },
   {
     slug: "go-ecommerce",
@@ -39,6 +42,7 @@ export const projects: readonly ProjectDefinition[] = [
     hasConfidentialSource: false,
     liveUrl: null,
     repositoryUrl: null,
+    coverImage: "/project-covers/go-ecommerce.svg",
   },
 ] as const;
 
