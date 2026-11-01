@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 
 import { getSiteContent } from "@/content/site";
+import { LabDashboard } from "@/features/lab/lab-dashboard";
 import { isLocale } from "@/lib/i18n";
 
 export default async function LabPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -11,7 +12,7 @@ export default async function LabPage({ params }: { params: Promise<{ locale: st
   return (
     <div className="page-frame">
       <header className="page-heading"><span className="section-label">Interactive product lab</span><div className="page-heading-copy"><h1>{content.lab.title}</h1><p>{content.lab.intro}</p></div></header>
-      <section className="placeholder-panel"><span className="section-label">{content.common.demoLabel}</span><h2>API connection pending</h2><p>{content.lab.fictionalNotice}</p></section>
+      <LabDashboard content={content.lab} />
     </div>
   );
 }

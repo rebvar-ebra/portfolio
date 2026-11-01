@@ -124,6 +124,25 @@ export type SiteContent = {
     title: string;
     intro: string;
     fictionalNotice: string;
+    createTitle: string;
+    itemLabel: string;
+    itemPlaceholder: string;
+    quantityLabel: string;
+    createAction: string;
+    creatingAction: string;
+    filtersLabel: string;
+    allFilter: string;
+    statusLabels: Record<"new" | "preparing" | "ready", string>;
+    nextActions: Record<"new" | "preparing", string>;
+    statsLabels: Record<"total" | "new" | "preparing" | "ready", string>;
+    empty: string;
+    loading: string;
+    retry: string;
+    loadError: string;
+    mutationError: string;
+    itemError: string;
+    quantityError: string;
+    connectionLabels: Record<"connecting" | "live" | "reconnecting", string>;
   };
   projectCopy: readonly ProjectCopy[];
   footer: { note: string; availability: string };
@@ -220,6 +239,25 @@ const englishContent: SiteContent = {
     intro:
       "Create a fictional order, move it through the kitchen, and watch the dashboard update through a Go API and PostgreSQL.",
     fictionalNotice: "Demo only. All names and orders are fictional; no payment or customer data is collected.",
+    createTitle: "Add a fictional order",
+    itemLabel: "Menu item",
+    itemPlaceholder: "e.g. Charred tomato gnocchi",
+    quantityLabel: "Quantity",
+    createAction: "Create order",
+    creatingAction: "Creating order…",
+    filtersLabel: "Filter orders",
+    allFilter: "All",
+    statusLabels: { new: "New", preparing: "Preparing", ready: "Ready" },
+    nextActions: { new: "Start preparing", preparing: "Mark ready" },
+    statsLabels: { total: "All orders", new: "New", preparing: "Preparing", ready: "Ready" },
+    empty: "No orders match this filter. Create one or choose another status.",
+    loading: "Loading demo orders…",
+    retry: "Try again",
+    loadError: "The demo API could not be reached. Check that the Go service is running.",
+    mutationError: "That change did not reach the kitchen board. Try again.",
+    itemError: "Enter an item name between 2 and 80 characters.",
+    quantityError: "Choose a quantity from 1 to 20.",
+    connectionLabels: { connecting: "Connecting", live: "Live updates on", reconnecting: "Reconnecting" },
   },
   projectCopy: [
     {
@@ -349,6 +387,25 @@ const germanContent: SiteContent = {
     intro:
       "Lege eine fiktive Bestellung an, bewege sie durch die Küche und beobachte die Aktualisierung über eine Go-API und PostgreSQL.",
     fictionalNotice: "Nur eine Demo. Alle Namen und Bestellungen sind fiktiv; Zahlungs- oder Kundendaten werden nicht erfasst.",
+    createTitle: "Fiktive Bestellung hinzufügen",
+    itemLabel: "Gericht",
+    itemPlaceholder: "z. B. Gnocchi mit geschmorten Tomaten",
+    quantityLabel: "Anzahl",
+    createAction: "Bestellung anlegen",
+    creatingAction: "Bestellung wird angelegt…",
+    filtersLabel: "Bestellungen filtern",
+    allFilter: "Alle",
+    statusLabels: { new: "Neu", preparing: "In Zubereitung", ready: "Fertig" },
+    nextActions: { new: "Zubereitung starten", preparing: "Als fertig markieren" },
+    statsLabels: { total: "Alle Bestellungen", new: "Neu", preparing: "In Zubereitung", ready: "Fertig" },
+    empty: "Keine Bestellung entspricht diesem Filter. Lege eine an oder wähle einen anderen Status.",
+    loading: "Demo-Bestellungen werden geladen…",
+    retry: "Erneut versuchen",
+    loadError: "Die Demo-API ist nicht erreichbar. Prüfe, ob der Go-Dienst läuft.",
+    mutationError: "Die Änderung hat die Küchenübersicht nicht erreicht. Versuche es erneut.",
+    itemError: "Gib einen Namen mit 2 bis 80 Zeichen ein.",
+    quantityError: "Wähle eine Anzahl zwischen 1 und 20.",
+    connectionLabels: { connecting: "Verbindung wird hergestellt", live: "Live-Aktualisierung aktiv", reconnecting: "Neue Verbindung wird hergestellt" },
   },
   projectCopy: [
     {
