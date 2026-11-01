@@ -1,0 +1,13 @@
+{
+  "name": "rebvar-studio",
+  "private": true,
+  "packageManager": "pnpm@9.15.0",
+  "workspaces": ["web"],
+  "scripts": {
+    "build": "npm --workspace web run build",
+    "dev": "npm --workspace web run dev",
+    "lint": "npm --workspace web run lint",
+    "test": "npm --workspace web run test",
+    "typecheck": "npm --workspace web run typecheck"
+  }
+}
