@@ -2,8 +2,18 @@ import { notFound } from "next/navigation";
 
 import { getSiteContent } from "@/content/site";
 import { isLocale } from "@/lib/i18n";
+import { createLocalizedMetadata } from "@/lib/metadata";
 
-export default async function AboutPage({ params }: { params: Promise<{ locale: string }> }) {
+type AboutPageProps = { params: Promise<{ locale: string }> };
+
+export async function generateMetadata({ params }: AboutPageProps) {
+  const { locale } = await params;
+  if (!isLocale(locale)) return {};
+  const content = getSiteContent(locale);
+  return createLocalizedMetadata(locale, "/about", content.about.title, content.about.intro);
+}
+
+export default async function AboutPage({ params }: AboutPageProps) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
   const content = getSiteContent(locale);

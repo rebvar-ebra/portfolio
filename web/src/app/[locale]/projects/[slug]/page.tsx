@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 
 import { getSiteContent } from "@/content/site";
 import { isLocale } from "@/lib/i18n";
+import { createLocalizedMetadata } from "@/lib/metadata";
 import { getLocalizedProjectPaths, getProjectPageData } from "@/lib/routes";
 
 type ProjectPageProps = { params: Promise<{ locale: string; slug: string }> };
@@ -14,7 +15,7 @@ export async function generateMetadata({ params }: ProjectPageProps): Promise<Me
   const { locale, slug } = await params;
   if (!isLocale(locale)) return {};
   const data = getProjectPageData(locale, slug);
-  return data ? { title: data.copy.title, description: data.copy.summary } : {};
+  return data ? createLocalizedMetadata(locale, `/projects/${slug}`, data.copy.title, data.copy.summary) : {};
 }
 
 export default async function ProjectPage({ params }: ProjectPageProps) {

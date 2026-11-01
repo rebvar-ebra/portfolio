@@ -5,8 +5,18 @@ import { ProjectList } from "@/components/project-list";
 import { RequestPath } from "@/components/request-path";
 import { getSiteContent } from "@/content/site";
 import { isLocale } from "@/lib/i18n";
+import { createLocalizedMetadata } from "@/lib/metadata";
 
-export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
+type HomePageProps = { params: Promise<{ locale: string }> };
+
+export async function generateMetadata({ params }: HomePageProps) {
+  const { locale } = await params;
+  if (!isLocale(locale)) return {};
+  const content = getSiteContent(locale);
+  return createLocalizedMetadata(locale, "", `${content.person.name} — ${content.person.role}`, content.person.introduction);
+}
+
+export default async function HomePage({ params }: HomePageProps) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
   const content = getSiteContent(locale);

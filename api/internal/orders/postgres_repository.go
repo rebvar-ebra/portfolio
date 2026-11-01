@@ -64,11 +64,21 @@ func (repository *PostgresRepository) UpdateStatus(ctx context.Context, id int64
 	var order Order
 	err := repository.pool.QueryRow(ctx, `
 		UPDATE demo_orders SET status = $2, updated_at = NOW()
-		WHERE id = $1
+		WHERE id = $1 AND (
+			(status = 'new' AND $2 = 'preparing') OR
+			(status = 'preparing' AND $2 = 'ready')
+		)
 		RETURNING id, item, quantity, status, created_at, updated_at`, id, status).
 		Scan(&order.ID, &order.Item, &order.Quantity, &order.Status, &order.CreatedAt, &order.UpdatedAt)
 	if errors.Is(err, pgx.ErrNoRows) {
-		return Order{}, ErrNotFound
+		var exists bool
+		if existsErr := repository.pool.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM demo_orders WHERE id = $1)`, id).Scan(&exists); existsErr != nil {
+			return Order{}, existsErr
+		}
+		if !exists {
+			return Order{}, ErrNotFound
+		}
+		return Order{}, ErrInvalidTransition
 	}
 	return order, err
 }

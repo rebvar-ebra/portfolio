@@ -91,6 +91,7 @@ API_INTERNAL_URL='http://localhost:8080' pnpm --dir web dev
 | `DEMO_RESET_TOKEN` | API | Required in `X-Demo-Reset-Token` for manual reset. Use a long random production value. |
 | `ALLOWED_ORIGIN` | API | Exact browser origin allowed by CORS. |
 | `RATE_LIMIT` | API | Requests per IP per one-minute fixed window. |
+| `TRUSTED_PROXY_CIDRS` | API | Comma-separated proxy CIDRs allowed to supply the client IP via `X-Forwarded-For`. Set this to the precise proxy network in production. |
 | `API_INTERNAL_URL` | Web | Server-side/proxy origin for the Go service. |
 | `WEB_PORT`, `API_PORT` | Compose | Optional host-port overrides. |
 | `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD` | Database | Local database configuration. |

@@ -31,11 +31,21 @@ export const validateOrderDraft = (
   | { valid: true; item: string; quantity: number }
   | { valid: false; reason: "item" | "quantity" } => {
   const item = draft.item.trim();
-  if (item.length < 2 || item.length > 80) {
+  const characters = Array.from(item);
+  const containsControlCharacter = characters.some((character) => /[\u0000-\u001f\u007f-\u009f]/u.test(character));
+  if (characters.length < 2 || characters.length > 80 || containsControlCharacter) {
     return { valid: false, reason: "item" };
   }
   if (!Number.isInteger(draft.quantity) || draft.quantity < 1 || draft.quantity > 20) {
     return { valid: false, reason: "quantity" };
   }
   return { valid: true, item, quantity: draft.quantity };
+};
+
+export const createResponseGate = () => {
+  let latest = 0;
+  return {
+    begin: () => ++latest,
+    isLatest: (token: number) => token === latest,
+  };
 };

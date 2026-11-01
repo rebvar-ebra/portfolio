@@ -58,6 +58,11 @@ func (repository *MemoryRepository) UpdateStatus(_ context.Context, id int64, st
 	if !exists {
 		return Order{}, ErrNotFound
 	}
+	isAllowed := (order.Status == StatusNew && status == StatusPreparing) ||
+		(order.Status == StatusPreparing && status == StatusReady)
+	if !isAllowed {
+		return Order{}, ErrInvalidTransition
+	}
 	order.Status = status
 	order.UpdatedAt = time.Now().UTC()
 	repository.orders[id] = order

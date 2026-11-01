@@ -23,11 +23,9 @@ export async function generateMetadata({ params }: Omit<LayoutProps, "children">
     metadataBase: new URL("https://rebvar.xyz"),
     title: { default: `${content.person.name} — ${content.person.role}`, template: `%s — ${content.person.name}` },
     description: content.person.introduction,
-    alternates: { canonical: `/${locale}`, languages: { en: "/en", de: "/de" } },
     openGraph: {
       title: `${content.person.name} — ${content.person.role}`,
       description: content.person.introduction,
-      url: `/${locale}`,
       siteName: "Rebvar Studio",
       locale: locale === "de" ? "de_DE" : "en_GB",
       type: "website",

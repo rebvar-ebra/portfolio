@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"strings"
 	"time"
+	"unicode"
+	"unicode/utf8"
 )
 
 type Status string
@@ -85,7 +87,10 @@ func (service *Service) List(ctx context.Context, rawStatus string) ([]Order, er
 
 func (service *Service) Create(ctx context.Context, input CreateInput) (Order, error) {
 	input.Item = strings.TrimSpace(input.Item)
-	if len(input.Item) < 2 || len(input.Item) > 80 || input.Quantity < 1 || input.Quantity > 20 {
+	itemLength := utf8.RuneCountInString(input.Item)
+	if !utf8.ValidString(input.Item) || itemLength < 2 || itemLength > 80 ||
+		strings.IndexFunc(input.Item, unicode.IsControl) >= 0 ||
+		input.Quantity < 1 || input.Quantity > 20 {
 		return Order{}, ErrInvalidInput
 	}
 
@@ -95,17 +100,6 @@ func (service *Service) Create(ctx context.Context, input CreateInput) (Order, e
 func (service *Service) UpdateStatus(ctx context.Context, id int64, next Status) (Order, error) {
 	if _, err := ParseStatus(string(next)); err != nil {
 		return Order{}, err
-	}
-
-	current, err := service.repository.Get(ctx, id)
-	if err != nil {
-		return Order{}, err
-	}
-
-	isAllowed := (current.Status == StatusNew && next == StatusPreparing) ||
-		(current.Status == StatusPreparing && next == StatusReady)
-	if !isAllowed {
-		return Order{}, ErrInvalidTransition
 	}
 
 	return service.repository.UpdateStatus(ctx, id, next)

@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/signal"
 	"strconv"
+	"strings"
 	"syscall"
 	"time"
 
@@ -39,10 +40,11 @@ func main() {
 	repository := orders.NewPostgresRepository(pool)
 	service := orders.NewService(repository)
 	api := httpapi.NewHandler(service, httpapi.Config{
-		AllowedOrigin: environment("ALLOWED_ORIGIN", "http://localhost:3000"),
-		ResetToken:    requiredEnvironment("DEMO_RESET_TOKEN"),
-		RateLimit:     rateLimit,
-		RateWindow:    time.Minute,
+		AllowedOrigin:     environment("ALLOWED_ORIGIN", "http://localhost:3000"),
+		ResetToken:        requiredEnvironment("DEMO_RESET_TOKEN"),
+		RateLimit:         rateLimit,
+		RateWindow:        time.Minute,
+		TrustedProxyCIDRs: splitList(os.Getenv("TRUSTED_PROXY_CIDRS")),
 	})
 
 	server := &http.Server{
@@ -87,4 +89,18 @@ func environment(key, fallback string) string {
 		return value
 	}
 	return fallback
+}
+
+func splitList(value string) []string {
+	if strings.TrimSpace(value) == "" {
+		return nil
+	}
+	parts := strings.Split(value, ",")
+	result := make([]string, 0, len(parts))
+	for _, part := range parts {
+		if trimmed := strings.TrimSpace(part); trimmed != "" {
+			result = append(result, trimmed)
+		}
+	}
+	return result
 }

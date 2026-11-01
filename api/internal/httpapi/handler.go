@@ -16,10 +16,12 @@ import (
 const maxRequestBody = 4096
 
 type Config struct {
-	AllowedOrigin string
-	ResetToken    string
-	RateLimit     int
-	RateWindow    time.Duration
+	AllowedOrigin     string
+	ResetToken        string
+	RateLimit         int
+	RateWindow        time.Duration
+	TrustedProxyCIDRs []string
+	EventHeartbeat    time.Duration
 }
 
 type handler struct {
@@ -35,6 +37,9 @@ func NewHandler(service *orders.Service, config Config) http.Handler {
 	if config.RateWindow <= 0 {
 		config.RateWindow = time.Minute
 	}
+	if config.EventHeartbeat <= 0 {
+		config.EventHeartbeat = 10 * time.Second
+	}
 
 	api := &handler{service: service, config: config, events: newEventHub()}
 	mux := http.NewServeMux()
@@ -46,7 +51,7 @@ func NewHandler(service *orders.Service, config Config) http.Handler {
 	mux.HandleFunc("GET /api/events", api.eventStream)
 	mux.HandleFunc("POST /api/demo/reset", api.reset)
 
-	limited := newFixedWindowLimiter(config.RateLimit, config.RateWindow).middleware(mux)
+	limited := newFixedWindowLimiter(config.RateLimit, config.RateWindow, config.TrustedProxyCIDRs).middleware(mux)
 	return api.withCORS(limited)
 }
 
@@ -143,8 +148,8 @@ func (api *handler) reset(writer http.ResponseWriter, request *http.Request) {
 }
 
 func (api *handler) eventStream(writer http.ResponseWriter, request *http.Request) {
-	flusher, ok := writer.(http.Flusher)
-	if !ok {
+	controller := http.NewResponseController(writer)
+	if err := controller.SetWriteDeadline(time.Time{}); err != nil && !errors.Is(err, http.ErrNotSupported) {
 		writeError(writer, http.StatusInternalServerError, "stream_unavailable", "Live updates are unavailable.")
 		return
 	}
@@ -153,19 +158,36 @@ func (api *handler) eventStream(writer http.ResponseWriter, request *http.Reques
 	writer.Header().Set("Connection", "keep-alive")
 	events, unsubscribe := api.events.subscribe()
 	defer unsubscribe()
-	_, _ = fmt.Fprint(writer, "event: connected\ndata: {}\n\n")
-	flusher.Flush()
+	writeEvent := func(event string) error {
+		if _, err := fmt.Fprintf(writer, "event: %s\ndata: {}\n\n", event); err != nil {
+			return err
+		}
+		return controller.Flush()
+	}
+	if err := writeEvent("connected"); err != nil {
+		return
+	}
+	heartbeat := time.NewTicker(api.config.EventHeartbeat)
+	defer heartbeat.Stop()
 
 	for {
 		select {
 		case <-request.Context().Done():
 			return
+		case <-heartbeat.C:
+			if _, err := fmt.Fprint(writer, ": keepalive\n\n"); err != nil {
+				return
+			}
+			if err := controller.Flush(); err != nil {
+				return
+			}
 		case _, open := <-events:
 			if !open {
 				return
 			}
-			_, _ = fmt.Fprint(writer, "event: orders-changed\ndata: {}\n\n")
-			flusher.Flush()
+			if err := writeEvent("orders-changed"); err != nil {
+				return
+			}
 		}
 	}
 }

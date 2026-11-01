@@ -4,7 +4,7 @@ import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from "re
 
 import type { SiteContent } from "@/content/site";
 import { createOrder, listOrders, updateOrderStatus } from "./api-client";
-import { calculateStats, filterOrders, getNextStatus, validateOrderDraft } from "./lab-domain";
+import { calculateStats, createResponseGate, filterOrders, getNextStatus, validateOrderDraft } from "./lab-domain";
 import type { Order, OrderFilter, OrderStatus } from "./types";
 
 type ConnectionState = "connecting" | "live" | "reconnecting";
@@ -22,35 +22,43 @@ export function LabDashboard({ content }: { content: SiteContent["lab"] }) {
   const [quantity, setQuantity] = useState(1);
   const itemInput = useRef<HTMLInputElement>(null);
   const quantityInput = useRef<HTMLInputElement>(null);
+  const responseGate = useRef(createResponseGate());
 
   const loadOrders = useCallback(async () => {
+    const requestToken = responseGate.current.begin();
     try {
       const result = await listOrders();
+      if (!responseGate.current.isLatest(requestToken)) return;
       setOrders(result);
       setError(null);
     } catch {
+      if (!responseGate.current.isLatest(requestToken)) return;
       setError(content.loadError);
     } finally {
-      setIsLoading(false);
+      if (responseGate.current.isLatest(requestToken)) setIsLoading(false);
     }
   }, [content.loadError]);
 
   useEffect(() => {
     let isActive = true;
+    const requestToken = responseGate.current.begin();
     void listOrders()
       .then((result) => {
-        if (!isActive) return;
+        if (!isActive || !responseGate.current.isLatest(requestToken)) return;
         setOrders(result);
         setError(null);
       })
       .catch(() => {
-        if (isActive) setError(content.loadError);
+        if (isActive && responseGate.current.isLatest(requestToken)) setError(content.loadError);
       })
       .finally(() => {
-        if (isActive) setIsLoading(false);
+        if (isActive && responseGate.current.isLatest(requestToken)) setIsLoading(false);
       });
     const events = new EventSource("/api/events");
-    events.onopen = () => setConnection("live");
+    events.onopen = () => {
+      setConnection("live");
+      void loadOrders();
+    };
     events.addEventListener("orders-changed", () => void loadOrders());
     events.onerror = () => setConnection("reconnecting");
     return () => {
@@ -121,7 +129,7 @@ export function LabDashboard({ content }: { content: SiteContent["lab"] }) {
         <form className="order-form" onSubmit={submitOrder} noValidate>
           <h2>{content.createTitle}</h2>
           <label htmlFor="order-item">{content.itemLabel}</label>
-          <input ref={itemInput} id="order-item" name="item" value={item} onChange={(event) => setItem(event.target.value)} placeholder={content.itemPlaceholder} maxLength={80} autoComplete="off" aria-invalid={formError === content.itemError} aria-describedby={formError ? "order-form-error" : undefined} />
+          <input ref={itemInput} id="order-item" name="item" value={item} onChange={(event) => setItem(event.target.value)} placeholder={content.itemPlaceholder} autoComplete="off" aria-invalid={formError === content.itemError} aria-describedby={formError ? "order-form-error" : undefined} />
           <label htmlFor="order-quantity">{content.quantityLabel}</label>
           <input ref={quantityInput} id="order-quantity" name="quantity" type="number" inputMode="numeric" min={1} max={20} value={quantity} onChange={(event) => setQuantity(Number(event.target.value))} autoComplete="off" aria-invalid={formError === content.quantityError} />
           {formError ? <p className="form-error" id="order-form-error" role="alert">{formError}</p> : null}

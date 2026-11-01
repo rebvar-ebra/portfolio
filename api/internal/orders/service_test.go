@@ -3,6 +3,7 @@ package orders_test
 import (
 	"context"
 	"errors"
+	"strings"
 	"testing"
 
 	"github.com/rebvar/rebvar-studio/api/internal/orders"
@@ -37,6 +38,48 @@ func TestCreateRejectsInvalidInputWithoutMutatingRepository(t *testing.T) {
 	}
 	if len(got) != 0 {
 		t.Fatalf("expected no orders, got %d", len(got))
+	}
+}
+
+func TestRepositoryRejectsAStaleTransitionThatWouldRegressReadyOrder(t *testing.T) {
+	repo := orders.NewMemoryRepository()
+	created, _ := repo.Create(context.Background(), orders.CreateInput{Item: "Herb pasta", Quantity: 1})
+	_, _ = repo.UpdateStatus(context.Background(), created.ID, orders.StatusPreparing)
+	_, _ = repo.UpdateStatus(context.Background(), created.ID, orders.StatusReady)
+
+	if _, err := repo.UpdateStatus(context.Background(), created.ID, orders.StatusPreparing); !errors.Is(err, orders.ErrInvalidTransition) {
+		t.Fatalf("expected stale write rejection, got %v", err)
+	}
+	current, _ := repo.Get(context.Background(), created.ID)
+	if current.Status != orders.StatusReady {
+		t.Fatalf("stale write regressed order to %q", current.Status)
+	}
+}
+
+func TestCreateUsesUnicodeCharactersAndRejectsControls(t *testing.T) {
+	service := orders.NewService(orders.NewMemoryRepository())
+	tests := []struct {
+		name    string
+		item    string
+		wantErr bool
+	}{
+		{name: "one accented character is still too short", item: "é", wantErr: true},
+		{name: "eighty umlauts are valid", item: strings.Repeat("ä", 80)},
+		{name: "eighty-one umlauts are too long", item: strings.Repeat("ä", 81), wantErr: true},
+		{name: "supplementary characters count once", item: strings.Repeat("🍜", 80)},
+		{name: "nul is rejected", item: "Soup\x00special", wantErr: true},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			_, err := service.Create(context.Background(), orders.CreateInput{Item: test.item, Quantity: 1})
+			if test.wantErr && !errors.Is(err, orders.ErrInvalidInput) {
+				t.Fatalf("expected invalid input, got %v", err)
+			}
+			if !test.wantErr && err != nil {
+				t.Fatalf("expected valid input, got %v", err)
+			}
+		})
 	}
 }
 

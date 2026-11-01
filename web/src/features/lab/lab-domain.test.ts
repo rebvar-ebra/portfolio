@@ -5,6 +5,7 @@ import {
   filterOrders,
   getNextStatus,
   validateOrderDraft,
+  createResponseGate,
 } from "./lab-domain";
 import type { Order } from "./types";
 
@@ -36,5 +37,18 @@ describe("restaurant lab domain", () => {
     expect(validateOrderDraft({ item: " ", quantity: 2 })).toEqual({ valid: false, reason: "item" });
     expect(validateOrderDraft({ item: "Soup", quantity: 0 })).toEqual({ valid: false, reason: "quantity" });
     expect(validateOrderDraft({ item: "Soup", quantity: 21 })).toEqual({ valid: false, reason: "quantity" });
+    expect(validateOrderDraft({ item: "é", quantity: 1 })).toEqual({ valid: false, reason: "item" });
+    expect(validateOrderDraft({ item: "ä".repeat(80), quantity: 1 }).valid).toBe(true);
+    expect(validateOrderDraft({ item: "🍜".repeat(80), quantity: 1 }).valid).toBe(true);
+    expect(validateOrderDraft({ item: "Soup\u0000special", quantity: 1 })).toEqual({ valid: false, reason: "item" });
+  });
+
+  it("accepts only the latest overlapping snapshot response", () => {
+    const gate = createResponseGate();
+    const first = gate.begin();
+    const second = gate.begin();
+
+    expect(gate.isLatest(first)).toBe(false);
+    expect(gate.isLatest(second)).toBe(true);
   });
 });
