@@ -3,7 +3,7 @@ import type { Locale } from "@/lib/i18n";
 export type ProjectKind = "professional" | "demo" | "learning";
 
 export type ProjectDefinition = {
-  slug: "3d-scan-platform" | "restaurant-operations" | "go-ecommerce";
+  slug: "3d-scan-platform" | "restaurant-operations" | "neuer-tag-ev";
   kind: ProjectKind;
   technologies: readonly string[];
   publicSafe: boolean;
@@ -20,29 +20,29 @@ export const projects: readonly ProjectDefinition[] = [
     technologies: ["React", "Node.js", "Python", "FastAPI", "Nextcloud"],
     publicSafe: true,
     hasConfidentialSource: true,
-    liveUrl: null,
+    liveUrl: "https://www.think3ddd.de/",
     repositoryUrl: null,
     coverImage: "/project-covers/scan-platform.svg",
   },
   {
     slug: "restaurant-operations",
     kind: "demo",
-    technologies: ["Next.js", "TypeScript", "Go", "PostgreSQL", "Docker"],
-    publicSafe: true,
-    hasConfidentialSource: false,
-    liveUrl: "/lab",
-    repositoryUrl: null,
-    coverImage: "/project-covers/restaurant-operations.svg",
-  },
-  {
-    slug: "go-ecommerce",
-    kind: "learning",
-    technologies: ["Go"],
+    technologies: ["Next.js", "TypeScript", "Sanity", "Docker"],
     publicSafe: true,
     hasConfidentialSource: false,
     liveUrl: null,
     repositoryUrl: null,
-    coverImage: "/project-covers/go-ecommerce.svg",
+    coverImage: "/project-covers/restaurant-operations.svg",
+  },
+  {
+    slug: "neuer-tag-ev",
+    kind: "professional",
+    technologies: ["Next.js", "TypeScript", "Sanity", "Vercel"],
+    publicSafe: true,
+    hasConfidentialSource: false,
+    liveUrl: "https://neuertag-ev.de/",
+    repositoryUrl: null,
+    coverImage: "/project-covers/neuer-tag-ev.svg",
   },
 ] as const;
 
@@ -110,7 +110,6 @@ export type SiteContent = {
     headline: string;
     intro: string;
     primaryAction: NavigationItem;
-    demoAction: NavigationItem;
     contactAction: NavigationItem;
     approachTitle: string;
     approach: string;
@@ -170,30 +169,6 @@ export type SiteContent = {
     linkedinLabel: string;
     note: string;
   };
-  lab: {
-    title: string;
-    intro: string;
-    fictionalNotice: string;
-    createTitle: string;
-    itemLabel: string;
-    itemPlaceholder: string;
-    quantityLabel: string;
-    createAction: string;
-    creatingAction: string;
-    filtersLabel: string;
-    allFilter: string;
-    statusLabels: Record<"new" | "preparing" | "ready", string>;
-    nextActions: Record<"new" | "preparing", string>;
-    statsLabels: Record<"total" | "new" | "preparing" | "ready", string>;
-    empty: string;
-    loading: string;
-    retry: string;
-    loadError: string;
-    mutationError: string;
-    itemError: string;
-    quantityError: string;
-    connectionLabels: Record<"connecting" | "live" | "reconnecting", string>;
-  };
   projectCopy: readonly ProjectCopy[];
   footer: { note: string; availability: string };
 };
@@ -222,7 +197,6 @@ const englishContent: SiteContent = {
     { label: "Home", href: route("en") },
     { label: "Projects", href: route("en", "/projects") },
     { label: "About", href: route("en", "/about") },
-    { label: "Lab", href: route("en", "/lab") },
     { label: "Contact", href: route("en", "/contact") },
   ],
   home: {
@@ -230,7 +204,6 @@ const englishContent: SiteContent = {
     intro:
       "Hi, I’m Rebvar—a full-stack developer in Berlin working from the interface down to the data model.",
     primaryAction: { label: "View projects", href: route("en", "/projects") },
-    demoAction: { label: "Try the demo", href: route("en", "/lab") },
     contactAction: { label: "Contact", href: route("en", "/contact") },
     approachTitle: "Built as one connected system",
     approach:
@@ -267,15 +240,14 @@ const englishContent: SiteContent = {
     decisions: "Technical decisions",
     challenges: "Challenges",
     learned: "What I learned",
-    liveDemo: "Open live demo",
+    liveDemo: "Visit live website",
     sourceUnavailable: "Repository link not yet provided",
     typeLabel: "Type",
     linksLabel: "Links",
   },
   projectsPage: {
     title: "Work, decisions, and what I learned.",
-    intro:
-      "Three projects at different stages: professional product work, a working full-stack demo, and a Go learning project.",
+    intro: "Three case studies spanning professional product work, full-stack product design, and a live nonprofit website.",
   },
   about: {
     label: "Profile",
@@ -289,7 +261,7 @@ const englishContent: SiteContent = {
     certificationsTitle: "Certifications",
     learningTitle: "Current focus",
     learning:
-      "I’m deepening my Go and backend engineering practice through small services, explicit interfaces, and production-minded testing.",
+      "I’m deepening my backend and content-platform practice with Sanity, explicit interfaces, and production-minded testing.",
     experience: [
       {
         role: "Full-Stack Developer Intern",
@@ -354,7 +326,7 @@ const englishContent: SiteContent = {
     ],
     skills: [
       { group: "Interface", items: ["JavaScript", "React", "HTML", "CSS", "Tailwind CSS", "Google Maps API"] },
-      { group: "Services & systems", items: ["Node.js", "Python", "PHP", "SQL", "LDAP", "WebDAV", "Nextcloud"] },
+      { group: "Backend", items: ["Sanity", "Node.js", "Python", "PHP", "SQL", "LDAP", "WebDAV", "Nextcloud"] },
       { group: "Delivery", items: ["Docker", "Jenkins", "GitLab CI/CD", "Cloudron", "Version control", "Agile"] },
     ],
   },
@@ -367,31 +339,6 @@ const englishContent: SiteContent = {
     emailLabel: "Email",
     linkedinLabel: "LinkedIn",
     note: "This site does not publish my phone number or street address and does not send form data to a third party.",
-  },
-  lab: {
-    title: "Restaurant operations, from order to ready.",
-    intro:
-      "Create a fictional order, move it through the kitchen, and watch the dashboard update through a Go API and PostgreSQL.",
-    fictionalNotice: "Demo only. All names and orders are fictional; no payment or customer data is collected.",
-    createTitle: "Add a fictional order",
-    itemLabel: "Menu item",
-    itemPlaceholder: "e.g. Charred tomato gnocchi…",
-    quantityLabel: "Quantity",
-    createAction: "Create order",
-    creatingAction: "Creating order…",
-    filtersLabel: "Filter orders",
-    allFilter: "All",
-    statusLabels: { new: "New", preparing: "Preparing", ready: "Ready" },
-    nextActions: { new: "Start preparing", preparing: "Mark ready" },
-    statsLabels: { total: "All orders", new: "New", preparing: "Preparing", ready: "Ready" },
-    empty: "No orders match this filter. Create one or choose another status.",
-    loading: "Loading demo orders…",
-    retry: "Try again",
-    loadError: "The demo API could not be reached. Check that the Go service is running.",
-    mutationError: "That change did not reach the kitchen board. Try again.",
-    itemError: "Enter an item name between 2 and 80 characters.",
-    quantityError: "Choose a quantity from 1 to 20.",
-    connectionLabels: { connecting: "Connecting", live: "Live updates on", reconnecting: "Reconnecting" },
   },
   projectCopy: [
     {
@@ -414,24 +361,24 @@ const englishContent: SiteContent = {
       summary: "A small operations board for moving fictional orders from new to ready.",
       problem: "A kitchen team needs one clear view of incoming work, its current state, and the load at each stage.",
       role: "Designed and built as a portfolio demonstration of frontend, API, database, validation, and container delivery skills.",
-      solution: "A Next.js dashboard calls a Go API backed by PostgreSQL. Server-Sent Events notify open clients when orders change.",
-      decisions: ["Use three explicit states instead of a configurable workflow.", "Keep derived statistics out of stored data.", "Use SSE for one-way update notifications with less complexity than WebSockets."],
-      challenges: ["Treating a public demo as untrusted input.", "Keeping reconnect and error states useful.", "Providing deterministic seed and reset behavior."],
+      solution: "A Next.js interface uses Sanity as its structured content backend, keeping operational content editable and presentation concerns separate.",
+      decisions: ["Use three explicit states instead of a configurable workflow.", "Model structured content in Sanity.", "Keep content queries separate from presentation components."],
+      challenges: ["Designing a clear content model.", "Keeping loading and error states useful.", "Maintaining consistent structured content across views."],
       learning: "A narrow vertical slice can demonstrate architecture more honestly than a wide but simulated product.",
       disclosure: "All data is fictional. The demo does not collect customer or payment information.",
     },
     {
-      slug: "go-ecommerce",
-      title: "Go E-commerce",
-      label: "Learning project",
-      summary: "A clearly labelled space for documenting Go learning through an e-commerce domain.",
-      problem: "The project is used to learn Go through a familiar domain without claiming production experience.",
-      role: "Learner and builder. Specific features, repository links, and screenshots still need verification before publication.",
-      solution: "The case study records learning goals now and leaves unverified implementation details as explicit gaps.",
-      decisions: ["Label the work as learning.", "Publish only implemented, verified features.", "Prefer clear standard-library patterns before adding frameworks."],
-      challenges: ["Learning idiomatic error handling.", "Designing small interfaces.", "Separating study goals from portfolio claims."],
-      learning: "In progress: verified notes and features will be added as the project develops.",
-      disclosure: "Placeholder case study. Add verified features and links before launch.",
+      slug: "neuer-tag-ev",
+      title: "Neuer Tag e.V.",
+      label: "Live nonprofit website · 2026",
+      summary: "A content-led website for a Berlin nonprofit working for equal opportunity, empowerment, and an inclusive society.",
+      problem: "Neuer Tag e.V. needed a clear public website that could introduce the organization, present its projects, publish news, guide people toward support, and make participation and donations easy to find.",
+      role: "Designed and built the website end to end, including the public interface, structured content architecture, Sanity integration, and production delivery.",
+      solution: "A responsive Next.js website uses Sanity as its content backend, giving the organization structured, editable pages for projects, news, help, membership, and donations while keeping the experience fast and focused.",
+      decisions: ["Use Sanity so the organization can maintain structured content without code changes.", "Give projects, help, membership, and donations clear paths in the information architecture.", "Include a prominent quick-exit control for visitors who may need to leave sensitive content immediately."],
+      challenges: ["Organizing a growing range of nonprofit content without overwhelming visitors.", "Balancing a distinctive visual identity with clarity and accessibility.", "Keeping editorial content flexible while preserving a consistent page system."],
+      learning: "The project strengthened my practice in content modeling, nonprofit-focused information architecture, accessible interaction design, and production delivery with Next.js and Sanity.",
+      disclosure: null,
     },
   ],
   footer: {
@@ -454,7 +401,6 @@ const germanContent: SiteContent = {
     { label: "Start", href: route("de") },
     { label: "Projekte", href: route("de", "/projects") },
     { label: "Über mich", href: route("de", "/about") },
-    { label: "Labor", href: route("de", "/lab") },
     { label: "Kontakt", href: route("de", "/contact") },
   ],
   home: {
@@ -462,7 +408,6 @@ const germanContent: SiteContent = {
     intro:
       "Hallo, ich bin Rebvar – Full-Stack-Entwickler in Berlin. Ich arbeite von der Oberfläche bis zum Datenmodell.",
     primaryAction: { label: "Projekte ansehen", href: route("de", "/projects") },
-    demoAction: { label: "Demo ausprobieren", href: route("de", "/lab") },
     contactAction: { label: "Kontakt", href: route("de", "/contact") },
     approachTitle: "Als zusammenhängendes System gedacht",
     approach:
@@ -499,15 +444,14 @@ const germanContent: SiteContent = {
     decisions: "Technische Entscheidungen",
     challenges: "Herausforderungen",
     learned: "Was ich gelernt habe",
-    liveDemo: "Live-Demo öffnen",
+    liveDemo: "Live-Website öffnen",
     sourceUnavailable: "Repository-Link noch nicht vorhanden",
     typeLabel: "Art",
     linksLabel: "Links",
   },
   projectsPage: {
     title: "Arbeit, Entscheidungen und Erkenntnisse.",
-    intro:
-      "Drei Projekte in unterschiedlichen Phasen: professionelle Produktarbeit, eine funktionierende Full-Stack-Demo und ein Go-Lernprojekt.",
+    intro: "Drei Fallstudien aus professioneller Produktarbeit, Full-Stack-Produktgestaltung und einer live geschalteten Non-Profit-Website.",
   },
   about: {
     label: "Profil",
@@ -521,7 +465,7 @@ const germanContent: SiteContent = {
     certificationsTitle: "Zertifizierungen",
     learningTitle: "Aktueller Schwerpunkt",
     learning:
-      "Ich vertiefe Go und Backend-Engineering durch kleine Dienste, klare Schnittstellen und produktionsnahe Tests.",
+      "Ich vertiefe Backend- und Content-Plattform-Entwicklung mit Sanity, klaren Schnittstellen und produktionsnahen Tests.",
     experience: [
       {
         role: "Praktikum als Full-Stack-Entwickler",
@@ -586,7 +530,7 @@ const germanContent: SiteContent = {
     ],
     skills: [
       { group: "Oberfläche", items: ["JavaScript", "React", "HTML", "CSS", "Tailwind CSS", "Google Maps API"] },
-      { group: "Dienste & Systeme", items: ["Node.js", "Python", "PHP", "SQL", "LDAP", "WebDAV", "Nextcloud"] },
+      { group: "Backend-Systeme", items: ["Sanity", "Node.js", "Python", "PHP", "SQL", "LDAP", "WebDAV", "Nextcloud"] },
       { group: "Bereitstellung", items: ["Docker", "Jenkins", "GitLab CI/CD", "Cloudron", "Versionsverwaltung", "Agile"] },
     ],
   },
@@ -599,31 +543,6 @@ const germanContent: SiteContent = {
     emailLabel: "E-Mail",
     linkedinLabel: "LinkedIn",
     note: "Diese Website veröffentlicht weder meine Telefonnummer noch meine Straßenadresse und sendet keine Formulardaten an Dritte.",
-  },
-  lab: {
-    title: "Restaurantabläufe – von der Bestellung bis zur Ausgabe.",
-    intro:
-      "Lege eine fiktive Bestellung an, bewege sie durch die Küche und beobachte die Aktualisierung über eine Go-API und PostgreSQL.",
-    fictionalNotice: "Nur eine Demo. Alle Namen und Bestellungen sind fiktiv; Zahlungs- oder Kundendaten werden nicht erfasst.",
-    createTitle: "Fiktive Bestellung hinzufügen",
-    itemLabel: "Gericht",
-    itemPlaceholder: "z. B. Gnocchi mit geschmorten Tomaten…",
-    quantityLabel: "Anzahl",
-    createAction: "Bestellung anlegen",
-    creatingAction: "Bestellung wird angelegt…",
-    filtersLabel: "Bestellungen filtern",
-    allFilter: "Alle",
-    statusLabels: { new: "Neu", preparing: "In Zubereitung", ready: "Fertig" },
-    nextActions: { new: "Zubereitung starten", preparing: "Als fertig markieren" },
-    statsLabels: { total: "Alle Bestellungen", new: "Neu", preparing: "In Zubereitung", ready: "Fertig" },
-    empty: "Keine Bestellung entspricht diesem Filter. Lege eine an oder wähle einen anderen Status.",
-    loading: "Demo-Bestellungen werden geladen…",
-    retry: "Erneut versuchen",
-    loadError: "Die Demo-API ist nicht erreichbar. Prüfe, ob der Go-Dienst läuft.",
-    mutationError: "Die Änderung hat die Küchenübersicht nicht erreicht. Versuche es erneut.",
-    itemError: "Gib einen Namen mit 2 bis 80 Zeichen ein.",
-    quantityError: "Wähle eine Anzahl zwischen 1 und 20.",
-    connectionLabels: { connecting: "Verbindung wird hergestellt", live: "Live-Aktualisierung aktiv", reconnecting: "Neue Verbindung wird hergestellt" },
   },
   projectCopy: [
     {
@@ -646,24 +565,24 @@ const germanContent: SiteContent = {
       summary: "Eine kompakte Übersicht, die fiktive Bestellungen von ‚Neu‘ bis ‚Fertig‘ begleitet.",
       problem: "Ein Küchenteam benötigt eine klare Ansicht eingehender Arbeit, ihres aktuellen Status und der Auslastung jeder Phase.",
       role: "Als Portfolio-Demo für Frontend, API, Datenbank, Validierung und Container-Betrieb konzipiert und umgesetzt.",
-      solution: "Ein Next.js-Dashboard greift auf eine Go-API mit PostgreSQL zu. Server-Sent Events informieren offene Clients über Änderungen.",
-      decisions: ["Drei klare Zustände statt eines konfigurierbaren Workflows.", "Abgeleitete Kennzahlen nicht speichern.", "SSE für einseitige Aktualisierungen mit weniger Komplexität als WebSockets."],
-      challenges: ["Eine öffentliche Demo als nicht vertrauenswürdige Eingabe behandeln.", "Verbindungs- und Fehlerzustände hilfreich gestalten.", "Deterministische Start- und Rücksetzdaten bereitstellen."],
+      solution: "Eine Next.js-Oberfläche nutzt Sanity als strukturiertes Content-Backend und trennt editierbare Inhalte klar von der Darstellung.",
+      decisions: ["Drei klare Zustände statt eines konfigurierbaren Workflows.", "Strukturierte Inhalte in Sanity modellieren.", "Content-Abfragen von Darstellungskomponenten trennen."],
+      challenges: ["Ein klares Content-Modell entwerfen.", "Lade- und Fehlerzustände hilfreich gestalten.", "Strukturierte Inhalte über Ansichten hinweg konsistent halten."],
       learning: "Ein schmaler, vollständiger Funktionspfad zeigt Architektur ehrlicher als ein breites, aber nur simuliertes Produkt.",
       disclosure: "Alle Daten sind fiktiv. Die Demo erfasst keine Kunden- oder Zahlungsdaten.",
     },
     {
-      slug: "go-ecommerce",
-      title: "Go E-Commerce",
-      label: "Lernprojekt",
-      summary: "Ein klar gekennzeichneter Bereich, der das Lernen von Go anhand einer E-Commerce-Domäne dokumentiert.",
-      problem: "Das Projekt dient dazu, Go in einer vertrauten Domäne zu lernen, ohne Produktionserfahrung zu behaupten.",
-      role: "Lernender und Entwickler. Konkrete Funktionen, Repository-Links und Screenshots müssen vor der Veröffentlichung noch bestätigt werden.",
-      solution: "Die Fallstudie hält derzeit Lernziele fest und markiert nicht bestätigte Umsetzungsdetails ausdrücklich als offen.",
-      decisions: ["Die Arbeit als Lernprojekt kennzeichnen.", "Nur umgesetzte und überprüfte Funktionen veröffentlichen.", "Vor Frameworks zunächst klare Standardbibliothek-Muster lernen."],
-      challenges: ["Idiomatische Fehlerbehandlung lernen.", "Kleine Schnittstellen entwerfen.", "Lernziele von Portfolio-Aussagen trennen."],
-      learning: "In Arbeit: Bestätigte Notizen und Funktionen werden mit der Entwicklung ergänzt.",
-      disclosure: "Platzhalter-Fallstudie. Vor dem Start bestätigte Funktionen und Links ergänzen.",
+      slug: "neuer-tag-ev",
+      title: "Neuer Tag e.V.",
+      label: "Live-Website für einen gemeinnützigen Verein · 2026",
+      summary: "Eine inhaltsorientierte Website für einen Berliner Verein, der sich für Chancengleichheit, Empowerment und eine vielfältige Gesellschaft einsetzt.",
+      problem: "Neuer Tag e.V. benötigte eine klare öffentliche Website, die den Verein vorstellt, Projekte und Neuigkeiten veröffentlicht, zu Beratung und Hilfe führt und Beteiligung sowie Spenden leicht auffindbar macht.",
+      role: "Konzeption und Umsetzung der Website von der öffentlichen Oberfläche über die strukturierte Content-Architektur und Sanity-Integration bis zur produktiven Bereitstellung.",
+      solution: "Eine responsive Next.js-Website nutzt Sanity als Content-Backend. Der Verein kann damit strukturierte Inhalte für Projekte, News, Hilfe, Mitgliedschaft und Spenden pflegen, während die Nutzung schnell und fokussiert bleibt.",
+      decisions: ["Sanity einsetzen, damit der Verein strukturierte Inhalte ohne Codeänderungen pflegen kann.", "Projekte, Hilfe, Mitgliedschaft und Spenden als klare Wege in der Informationsarchitektur abbilden.", "Eine gut sichtbare Schnell-verlassen-Funktion für Menschen anbieten, die sensible Inhalte sofort verlassen müssen."],
+      challenges: ["Ein wachsendes Spektrum gemeinnütziger Inhalte übersichtlich organisieren.", "Eine eigenständige visuelle Identität mit Klarheit und Barrierearmut verbinden.", "Redaktionelle Flexibilität ermöglichen und zugleich ein konsistentes Seitensystem bewahren."],
+      learning: "Das Projekt vertiefte meine Erfahrung mit Content-Modellierung, Informationsarchitektur für gemeinnützige Organisationen, barrierearmen Interaktionen und produktiver Bereitstellung mit Next.js und Sanity.",
+      disclosure: null,
     },
   ],
   footer: {

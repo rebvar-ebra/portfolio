@@ -12,8 +12,6 @@ COPY --from=dependencies /app/node_modules ./node_modules
 COPY --from=dependencies /app/web/node_modules ./web/node_modules
 COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
 COPY web ./web
-ARG API_INTERNAL_URL=http://api:8080
-ENV API_INTERNAL_URL=$API_INTERNAL_URL
 RUN pnpm --dir web build
 
 FROM node:22-alpine AS runner

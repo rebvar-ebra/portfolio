@@ -1,6 +1,4 @@
-"use client";
-
-import * as React from "react";
+import type { CSSProperties } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
@@ -124,7 +122,7 @@ export function NotchedProjectCard({
               height: DISC,
               "--card-accent": accent,
               "--card-accent-fg": accentForeground,
-            } as React.CSSProperties
+            } as CSSProperties
           }
         >
           <ArrowUpRight className="size-5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />

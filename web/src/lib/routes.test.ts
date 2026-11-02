@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   getLocalizedProjectPaths,
+  getProjectLiveHref,
   getProjectPageData,
   replaceLocaleInPath,
 } from "./routes";
@@ -11,10 +12,10 @@ describe("localized portfolio routes", () => {
     expect(getLocalizedProjectPaths()).toEqual([
       { locale: "en", slug: "3d-scan-platform" },
       { locale: "en", slug: "restaurant-operations" },
-      { locale: "en", slug: "go-ecommerce" },
+      { locale: "en", slug: "neuer-tag-ev" },
       { locale: "de", slug: "3d-scan-platform" },
       { locale: "de", slug: "restaurant-operations" },
-      { locale: "de", slug: "go-ecommerce" },
+      { locale: "de", slug: "neuer-tag-ev" },
     ]);
   });
 
@@ -30,9 +31,14 @@ describe("localized portfolio routes", () => {
   });
 
   it("switches only the locale segment while preserving a nested path", () => {
-    expect(replaceLocaleInPath("/en/projects/go-ecommerce", "de")).toBe(
-      "/de/projects/go-ecommerce",
+    expect(replaceLocaleInPath("/en/projects/restaurant-operations", "de")).toBe(
+      "/de/projects/restaurant-operations",
     );
     expect(replaceLocaleInPath("/en", "de")).toBe("/de");
+  });
+
+  it("keeps external project links absolute while localizing internal links", () => {
+    expect(getProjectLiveHref("en", "https://neuertag-ev.de/")).toBe("https://neuertag-ev.de/");
+    expect(getProjectLiveHref("de", "/projects/demo")).toBe("/de/projects/demo");
   });
 });

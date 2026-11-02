@@ -31,3 +31,6 @@ export const replaceLocaleInPath = (pathname: string, locale: Locale) => {
   segments[0] = locale;
   return `/${segments.join("/")}`;
 };
+
+export const getProjectLiveHref = (locale: Locale, liveUrl: string) =>
+  /^https?:\/\//.test(liveUrl) ? liveUrl : `/${locale}${liveUrl}`;

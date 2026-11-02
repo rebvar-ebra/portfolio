@@ -12,12 +12,12 @@ describe("localized route metadata", () => {
   });
 
   it("generates localized case-study paths without collapsing to home", () => {
-    const metadata = createLocalizedMetadata("de", "/projects/go-ecommerce", "Go E-Commerce", "Lernprojekt");
+    const metadata = createLocalizedMetadata("de", "/projects/restaurant-operations", "Restaurant Operations", "Demo");
 
-    expect(metadata.alternates?.canonical).toBe("/de/projects/go-ecommerce");
+    expect(metadata.alternates?.canonical).toBe("/de/projects/restaurant-operations");
     expect(metadata.alternates?.languages).toEqual({
-      en: "/en/projects/go-ecommerce",
-      de: "/de/projects/go-ecommerce",
+      en: "/en/projects/restaurant-operations",
+      de: "/de/projects/restaurant-operations",
     });
   });
 });

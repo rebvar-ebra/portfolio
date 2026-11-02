@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import { getSiteContent } from "@/content/site";
 import { isLocale } from "@/lib/i18n";
 import { createLocalizedMetadata } from "@/lib/metadata";
-import { getLocalizedProjectPaths, getProjectPageData } from "@/lib/routes";
+import { getLocalizedProjectPaths, getProjectLiveHref, getProjectPageData } from "@/lib/routes";
 
 type ProjectPageProps = { params: Promise<{ locale: string; slug: string }> };
 
@@ -34,7 +34,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         <dl className="case-meta">
           <dt>{content.common.technologies}</dt><dd>{definition.technologies.join(", ")}</dd>
           <dt>{content.common.typeLabel}</dt><dd>{copy.label}</dd>
-          <dt>{content.common.linksLabel}</dt><dd>{definition.liveUrl ? <Link className="text-link" href={`/${locale}${definition.liveUrl}`}>{content.common.liveDemo}</Link> : content.common.sourceUnavailable}</dd>
+          <dt>{content.common.linksLabel}</dt><dd>{definition.liveUrl ? <Link className="text-link" href={getProjectLiveHref(locale, definition.liveUrl)}>{content.common.liveDemo}</Link> : content.common.sourceUnavailable}</dd>
         </dl>
       </header>
       <div className="case-body">

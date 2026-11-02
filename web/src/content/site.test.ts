@@ -23,8 +23,9 @@ describe("portfolio content", () => {
 
     expect(content.person.name).toBe("Rebvar Ebrahimi");
     expect(content.person.role).toBe(locale === "de" ? "Full-Stack-Entwickler" : "Full-Stack Developer");
-    expect(content.navigation).toHaveLength(5);
+    expect(content.navigation).toHaveLength(4);
     expect(content.home.primaryAction.href).toBe(`/${locale}/projects`);
+    expect(content.navigation.map((item) => item.href)).not.toContain(`/${locale}/lab`);
   });
 
   it("publishes only CV-verified contact links", () => {
@@ -49,13 +50,40 @@ describe("portfolio content", () => {
     ]);
   });
 
-  it("marks the Go project as learning work and the 3D case study as reconstructed", () => {
-    const goProject = projects.find((project) => project.slug === "go-ecommerce");
+  it("publishes the professional 3D case study without exposing confidential source", () => {
     const scanProject = projects.find((project) => project.slug === "3d-scan-platform");
 
-    expect(goProject?.kind).toBe("learning");
     expect(scanProject?.publicSafe).toBe(true);
     expect(scanProject?.hasConfidentialSource).toBe(true);
+    expect(scanProject?.liveUrl).toBe("https://www.think3ddd.de/");
+  });
+
+  it("keeps the restaurant case study without linking to the removed lab", () => {
+    const restaurantProject = projects.find((project) => project.slug === "restaurant-operations");
+
+    expect(restaurantProject?.liveUrl).toBeNull();
+  });
+
+  it.each(["en", "de"] as const)("publishes the Neuer Tag case study in %s", (locale) => {
+    const definition = projects.find((project) => project.slug === "neuer-tag-ev");
+    const copy = getSiteContent(locale).projectCopy.find((project) => project.slug === "neuer-tag-ev");
+
+    expect(definition).toMatchObject({
+      kind: "professional",
+      liveUrl: "https://neuertag-ev.de/",
+      technologies: ["Next.js", "TypeScript", "Sanity", "Vercel"],
+    });
+    expect(copy?.title).toBe("Neuer Tag e.V.");
+  });
+
+  it.each(["en", "de"] as const)("lists Sanity in the %s backend skills", (locale) => {
+    const content = getSiteContent(locale);
+    const backend = content.about.skills.find((group) =>
+      ["Backend", "Backend-Systeme"].includes(group.group),
+    );
+
+    expect(backend?.items).toContain("Sanity");
+    expect(JSON.stringify(content)).not.toMatch(/\bGo\b/);
   });
 
   it("localizes the request path and approach labels instead of mixing languages", () => {

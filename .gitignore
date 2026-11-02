@@ -1,7 +1,7 @@
-.env.example
 .env
-.env.local
 .env.*
+!.env.example
+!.env*.example
 .next/
 node_modules/
 coverage/
@@ -18,3 +18,5 @@ artifacts/
 web/.next/
 api/portfolio-api
 docs
+rebvar-studio-release.tar.gz
+rebvar-xyz-live.png

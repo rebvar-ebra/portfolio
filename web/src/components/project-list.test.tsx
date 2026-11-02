@@ -13,5 +13,8 @@ describe("ProjectList", () => {
     expect(markup).toContain('src="/project-covers/scan-platform.svg"');
     expect(markup).toContain("3D Scan Platform");
     expect(markup).toContain("React");
+    expect(markup).toContain('href="/en/projects/neuer-tag-ev"');
+    expect(markup).toContain('src="/project-covers/neuer-tag-ev.svg"');
+    expect(markup).not.toContain("go-ecommerce");
   });
 });

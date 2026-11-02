@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-labelledby="title desc">
+  <title id="title">Neuer Tag e.V. website cover</title>
+  <desc id="desc">Editorial composition inspired by the Neuer Tag visual identity</desc>
+  <rect width="1200" height="900" fill="#faf9f8"/>
+  <circle cx="1060" cy="108" r="250" fill="#fc4e13"/>
+  <circle cx="128" cy="780" r="260" fill="#590027"/>
+  <path d="M760 900C760 670 945 484 1175 484h25v416Z" fill="#f1efed"/>
+  <g transform="translate(120 150)">
+    <text x="0" y="0" fill="#590027" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700" letter-spacing="3">NEUER TAG E.V.</text>
+    <text x="0" y="118" fill="#1f1f1f" font-family="Arial, Helvetica, sans-serif" font-size="82" font-weight="700">
+      <tspan x="0" dy="0">Miteinander.</tspan>
+      <tspan x="0" dy="96">Füreinander.</tspan>
+    </text>
+    <text x="0" y="360" fill="#6b6b6b" font-family="Arial, Helvetica, sans-serif" font-size="28">Gemeinsam stark für eine bunte Gesellschaft.</text>
+    <rect x="0" y="420" width="224" height="68" rx="34" fill="#fc4e13"/>
+    <text x="112" y="464" text-anchor="middle" fill="#fff" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="700">LIVE WEBSITE</text>
+  </g>
+  <g transform="translate(760 550) rotate(-8)">
+    <rect width="320" height="225" rx="20" fill="#fff" stroke="#e0ddda" stroke-width="4"/>
+    <rect x="28" y="30" width="92" height="12" rx="6" fill="#590027"/>
+    <rect x="28" y="70" width="240" height="18" rx="9" fill="#1f1f1f"/>
+    <rect x="28" y="104" width="188" height="10" rx="5" fill="#ae8092"/>
+    <rect x="28" y="142" width="108" height="44" rx="22" fill="#fc4e13"/>
+  </g>
+</svg>
