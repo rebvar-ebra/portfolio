@@ -2,23 +2,23 @@ import { notFound } from "next/navigation";
 
 import { ProjectList } from "@/components/project-list";
 import { Hero } from "@/components/ui/hero-1";
-import { getSiteContent } from "@/content/site";
 import { isLocale } from "@/lib/i18n";
 import { createLocalizedMetadata } from "@/lib/metadata";
+import { getPortfolio } from "@/sanity/lib/portfolio";
 
 type HomePageProps = { params: Promise<{ locale: string }> };
 
 export async function generateMetadata({ params }: HomePageProps) {
   const { locale } = await params;
   if (!isLocale(locale)) return {};
-  const content = getSiteContent(locale);
+  const { content } = await getPortfolio(locale);
   return createLocalizedMetadata(locale, "", `${content.person.name} — ${content.person.role}`, content.person.introduction);
 }
 
 export default async function HomePage({ params }: HomePageProps) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
-  const content = getSiteContent(locale);
+  const { content, projects } = await getPortfolio(locale);
 
   return (
     <div className="page-frame home-page">
@@ -35,7 +35,7 @@ export default async function HomePage({ params }: HomePageProps) {
           <span className="section-label">{content.home.workLabel}</span>
           <h2 id="selected-work">{content.home.selectedWork}</h2>
         </div>
-        <ProjectList content={content} />
+        <ProjectList content={content} projects={projects.filter((project) => project.featured)} />
       </section>
 
       <section className="section" aria-labelledby="approach-title">

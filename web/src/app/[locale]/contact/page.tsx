@@ -1,22 +1,22 @@
 import { notFound } from "next/navigation";
 
-import { getSiteContent } from "@/content/site";
 import { isLocale } from "@/lib/i18n";
 import { createLocalizedMetadata } from "@/lib/metadata";
+import { getPortfolio } from "@/sanity/lib/portfolio";
 
 type ContactPageProps = { params: Promise<{ locale: string }> };
 
 export async function generateMetadata({ params }: ContactPageProps) {
   const { locale } = await params;
   if (!isLocale(locale)) return {};
-  const content = getSiteContent(locale);
+  const { content } = await getPortfolio(locale);
   return createLocalizedMetadata(locale, "/contact", content.contact.title, content.contact.intro);
 }
 
 export default async function ContactPage({ params }: ContactPageProps) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
-  const content = getSiteContent(locale);
+  const { content } = await getPortfolio(locale);
 
   return (
     <div className="page-frame">

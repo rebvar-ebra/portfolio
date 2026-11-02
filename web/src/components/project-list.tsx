@@ -1,7 +1,7 @@
-import { projects, type SiteContent } from "@/content/site";
+import type { ProjectDefinition, SiteContent } from "@/content/site";
 import { NotchedProjectCard } from "@/components/ui/notched-project-card";
 
-export function ProjectList({ content, limit }: { content: SiteContent; limit?: number }) {
+export function ProjectList({ content, projects, limit }: { content: SiteContent; projects: readonly ProjectDefinition[]; limit?: number }) {
   const visibleProjects = limit ? projects.slice(0, limit) : projects;
 
   return (

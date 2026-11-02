@@ -4,8 +4,8 @@ import type { ReactNode } from "react";
 
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
-import { getSiteContent } from "@/content/site";
 import { isLocale, locales } from "@/lib/i18n";
+import { getPortfolio } from "@/sanity/lib/portfolio";
 
 type LayoutProps = {
   children: ReactNode;
@@ -17,7 +17,7 @@ export const generateStaticParams = () => locales.map((locale) => ({ locale }));
 export async function generateMetadata({ params }: Omit<LayoutProps, "children">): Promise<Metadata> {
   const { locale } = await params;
   if (!isLocale(locale)) return {};
-  const content = getSiteContent(locale);
+  const { content } = await getPortfolio(locale);
 
   return {
     metadataBase: new URL("https://rebvar.xyz"),
@@ -36,7 +36,7 @@ export async function generateMetadata({ params }: Omit<LayoutProps, "children">
 export default async function LocaleLayout({ children, params }: LayoutProps) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
-  const content = getSiteContent(locale);
+  const { content } = await getPortfolio(locale);
 
   return (
     <div className="site-shell" lang={locale}>

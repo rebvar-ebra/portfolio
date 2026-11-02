@@ -1,22 +1,22 @@
 import { notFound } from "next/navigation";
 
-import { getSiteContent } from "@/content/site";
 import { isLocale } from "@/lib/i18n";
 import { createLocalizedMetadata } from "@/lib/metadata";
+import { getPortfolio } from "@/sanity/lib/portfolio";
 
 type AboutPageProps = { params: Promise<{ locale: string }> };
 
 export async function generateMetadata({ params }: AboutPageProps) {
   const { locale } = await params;
   if (!isLocale(locale)) return {};
-  const content = getSiteContent(locale);
+  const { content } = await getPortfolio(locale);
   return createLocalizedMetadata(locale, "/about", content.about.title, content.about.intro);
 }
 
 export default async function AboutPage({ params }: AboutPageProps) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
-  const content = getSiteContent(locale);
+  const { content } = await getPortfolio(locale);
 
   return (
     <div className="page-frame">

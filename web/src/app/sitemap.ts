@@ -1,11 +1,12 @@
 import type { MetadataRoute } from "next";
 
-import { projects } from "@/content/site";
 import { locales } from "@/lib/i18n";
+import { getPortfolio } from "@/sanity/lib/portfolio";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = "https://rebvar.xyz";
   const pages = ["", "/projects", "/about", "/contact"];
+  const { projects } = await getPortfolio("en");
 
   return locales.flatMap((locale) => [
     ...pages.map((page) => ({ url: `${base}/${locale}${page}`, changeFrequency: "monthly" as const, priority: page === "" ? 1 : 0.8 })),
