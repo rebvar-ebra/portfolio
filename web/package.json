@@ -8,6 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint . --max-warnings=0",
+    "sanity:seed": "sanity exec scripts/seed-portfolio.mjs --with-user-token",
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit"

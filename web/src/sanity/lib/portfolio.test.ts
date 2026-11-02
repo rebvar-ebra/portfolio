@@ -6,6 +6,8 @@ import { createPortfolioRepository, type PortfolioSource } from "./portfolio";
 
 const localeDocument = (locale: "en" | "de") => {
   const fallback = getSiteContent(locale);
+  // The omitted fields are reconstructed below or intentionally excluded from the CMS settings shape.
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { locale: _locale, navigation, projectCopy: _projectCopy, ...content } = fallback;
 
   return {
