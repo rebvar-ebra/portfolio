@@ -1,25 +1,9 @@
-import {
-  getProjectCopy,
-  getProjectDefinition,
-  projects,
-} from "@/content/site";
-import { locales, type Locale } from "@/lib/i18n";
+import type { Locale } from "@/lib/i18n";
+import { getPortfolioProject, getPortfolioProjectPaths } from "@/sanity/lib/portfolio";
 
-export const getLocalizedProjectPaths = () =>
-  locales.flatMap((locale) =>
-    projects.map((project) => ({ locale, slug: project.slug })),
-  );
+export const getLocalizedProjectPaths = getPortfolioProjectPaths;
 
-export const getProjectPageData = (locale: Locale, slug: string) => {
-  const definition = getProjectDefinition(slug);
-  const copy = getProjectCopy(locale, slug);
-
-  if (!definition || !copy) {
-    return undefined;
-  }
-
-  return { definition, copy };
-};
+export const getProjectPageData = (locale: Locale, slug: string) => getPortfolioProject(locale, slug);
 
 export const replaceLocaleInPath = (pathname: string, locale: Locale) => {
   const segments = pathname.split("/").filter(Boolean);

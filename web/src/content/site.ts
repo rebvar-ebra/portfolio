@@ -3,7 +3,9 @@ import type { Locale } from "@/lib/i18n";
 export type ProjectKind = "professional" | "demo" | "learning";
 
 export type ProjectDefinition = {
-  slug: "bunex-smashburger" | "3d-scan-platform" | "restaurant-operations" | "neuer-tag-ev";
+  slug: string;
+  order: number;
+  featured: boolean;
   kind: ProjectKind;
   technologies: readonly string[];
   publicSafe: boolean;
@@ -16,6 +18,8 @@ export type ProjectDefinition = {
 export const projects: readonly ProjectDefinition[] = [
   {
     slug: "bunex-smashburger",
+    order: 0,
+    featured: true,
     kind: "professional",
     technologies: ["Next.js", "TypeScript", "Tailwind CSS", "Framer Motion", "Vercel"],
     publicSafe: true,
@@ -26,6 +30,8 @@ export const projects: readonly ProjectDefinition[] = [
   },
   {
     slug: "3d-scan-platform",
+    order: 1,
+    featured: true,
     kind: "professional",
     technologies: ["React", "Node.js", "Python", "FastAPI", "Nextcloud"],
     publicSafe: true,
@@ -36,6 +42,8 @@ export const projects: readonly ProjectDefinition[] = [
   },
   {
     slug: "restaurant-operations",
+    order: 2,
+    featured: true,
     kind: "demo",
     technologies: ["Next.js", "TypeScript", "Sanity", "Docker"],
     publicSafe: true,
@@ -46,6 +54,8 @@ export const projects: readonly ProjectDefinition[] = [
   },
   {
     slug: "neuer-tag-ev",
+    order: 3,
+    featured: true,
     kind: "professional",
     technologies: ["Next.js", "TypeScript", "Sanity", "Vercel"],
     publicSafe: true,

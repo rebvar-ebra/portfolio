@@ -8,8 +8,8 @@ import {
 } from "./routes";
 
 describe("localized portfolio routes", () => {
-  it("generates one project path per locale and public project", () => {
-    expect(getLocalizedProjectPaths()).toEqual([
+  it("generates one project path per locale and public project", async () => {
+    await expect(getLocalizedProjectPaths()).resolves.toEqual([
       { locale: "en", slug: "bunex-smashburger" },
       { locale: "en", slug: "3d-scan-platform" },
       { locale: "en", slug: "restaurant-operations" },
@@ -21,15 +21,16 @@ describe("localized portfolio routes", () => {
     ]);
   });
 
-  it("joins project definition and localized copy for a valid route", () => {
-    const pageData = getProjectPageData("de", "restaurant-operations");
+  it("joins project definition, localized copy, and page content for a valid route", async () => {
+    const pageData = await getProjectPageData("de", "restaurant-operations");
 
     expect(pageData?.definition.kind).toBe("demo");
     expect(pageData?.copy.title).toBe("Restaurant Operations Demo");
+    expect(pageData?.content.locale).toBe("de");
   });
 
-  it("returns undefined for unknown project slugs", () => {
-    expect(getProjectPageData("en", "invented-project")).toBeUndefined();
+  it("returns undefined for unknown project slugs", async () => {
+    await expect(getProjectPageData("en", "invented-project")).resolves.toBeUndefined();
   });
 
   it("switches only the locale segment while preserving a nested path", () => {

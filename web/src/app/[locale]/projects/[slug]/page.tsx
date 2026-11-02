@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { getSiteContent } from "@/content/site";
 import { isLocale } from "@/lib/i18n";
 import { createLocalizedMetadata } from "@/lib/metadata";
 import { getLocalizedProjectPaths, getProjectLiveHref, getProjectPageData } from "@/lib/routes";
@@ -14,17 +13,16 @@ export const generateStaticParams = getLocalizedProjectPaths;
 export async function generateMetadata({ params }: ProjectPageProps): Promise<Metadata> {
   const { locale, slug } = await params;
   if (!isLocale(locale)) return {};
-  const data = getProjectPageData(locale, slug);
+  const data = await getProjectPageData(locale, slug);
   return data ? createLocalizedMetadata(locale, `/projects/${slug}`, data.copy.title, data.copy.summary) : {};
 }
 
 export default async function ProjectPage({ params }: ProjectPageProps) {
   const { locale, slug } = await params;
   if (!isLocale(locale)) notFound();
-  const data = getProjectPageData(locale, slug);
+  const data = await getProjectPageData(locale, slug);
   if (!data) notFound();
-  const content = getSiteContent(locale);
-  const { copy, definition } = data;
+  const { copy, definition, content } = data;
 
   return (
     <article className="page-frame">
