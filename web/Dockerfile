@@ -18,11 +18,10 @@ FROM node:22-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 ENV HOSTNAME=0.0.0.0
-ENV PORT=3000
+ENV PORT=8080
 RUN addgroup -S app && adduser -S -G app app
 COPY --from=builder --chown=app:app /app/web/.next/standalone ./
 COPY --from=builder --chown=app:app /app/web/.next/static ./web/.next/static
 COPY --from=builder --chown=app:app /app/web/public ./web/public
 USER app
-EXPOSE 3000
 CMD ["node", "web/server.js"]
