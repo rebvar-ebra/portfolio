@@ -261,7 +261,7 @@ const englishContent: SiteContent = {
     certificationsTitle: "Certifications",
     learningTitle: "Current focus",
     learning:
-      "I’m deepening my backend and content-platform practice with Sanity, explicit interfaces, and production-minded testing.",
+      "I’m strengthening my backend and content-platform skills through hands-on work with Go, Node.js, PostgreSQL, Sanity, API design, and testing.",
     experience: [
       {
         role: "Full-Stack Developer Intern",

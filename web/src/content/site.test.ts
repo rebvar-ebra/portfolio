@@ -83,7 +83,7 @@ describe("portfolio content", () => {
     );
 
     expect(backend?.items).toContain("Sanity");
-    expect(JSON.stringify(content)).not.toMatch(/\bGo\b/);
+    expect(backend?.items).not.toContain("Go");
   });
 
   it("localizes the request path and approach labels instead of mixing languages", () => {
