@@ -32,7 +32,8 @@ export const parseContactSubmission = (input: unknown): ContactParseResult => {
   if (!input || typeof input !== "object" || Array.isArray(input)) return { ok: false, reason: "invalid" };
   const source = input as Record<string, unknown>;
 
-  if (typeof source.website === "string" && source.website.trim()) return { ok: false, reason: "spam" };
+  if (typeof source.website !== "string") return { ok: false, reason: "invalid" };
+  if (source.website.trim()) return { ok: false, reason: "spam" };
 
   const submissionId = typeof source.submissionId === "string" ? source.submissionId.trim() : "";
   const name = bounded(source.name, CONTACT_LIMITS.name.min, CONTACT_LIMITS.name.max);

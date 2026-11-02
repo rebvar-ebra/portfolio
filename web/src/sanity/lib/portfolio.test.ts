@@ -128,7 +128,41 @@ describe("createPortfolioRepository", () => {
 
     const result = await repository.getPortfolio("en");
 
-    expect(result.projects.map(({ slug }) => slug)).toEqual(fallbackProjects.map(({ slug }) => slug));
+    expect(result.projects).toEqual([]);
+    expect(result.content.projectCopy).toEqual([]);
+  });
+
+  it("excludes a project from both locales when either translation is incomplete", async () => {
+    const incompleteGerman = { ...project().german, summary: undefined };
+    const repository = createPortfolioRepository(source({
+      settings: settings(),
+      projects: [project({ german: incompleteGerman })],
+    }));
+
+    expect((await repository.getPortfolio("en")).projects).toEqual([]);
+    expect((await repository.getPortfolio("de")).projects).toEqual([]);
+  });
+
+  it("maps the seed-shaped home document into presentation actions", async () => {
+    const english = localeDocument("en");
+    english.home = {
+      headline: "CMS headline",
+      intro: "CMS introduction",
+      primaryActionLabel: "Explore projects",
+      contactActionLabel: "Write to me",
+      approachTitle: "CMS approach",
+      selectedWork: "CMS work",
+      workLabel: "CMS work label",
+      methodLabel: "CMS method label",
+      approachSteps: [],
+    } as unknown as typeof english.home;
+    const repository = createPortfolioRepository(source({ settings: settings({ english }), projects: [project()] }));
+
+    const result = await repository.getPortfolio("en");
+
+    expect(result.content.home.primaryAction).toEqual({ label: "Explore projects", href: "/en/projects" });
+    expect(result.content.home.contactAction).toEqual({ label: "Write to me", href: "/en/contact" });
+    expect(result.content.home.approachSteps).toEqual([]);
   });
 
   it("maps the requested locale and keeps generated navigation routes", async () => {

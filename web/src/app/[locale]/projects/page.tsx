@@ -22,7 +22,7 @@ export default async function ProjectsPage({ params }: ProjectsPageProps) {
   return (
     <div className="page-frame">
       <header className="page-heading">
-        <span className="section-label">Project archive</span>
+        <span className="section-label">{content.projectsPage.label}</span>
         <div className="page-heading-copy"><h1>{content.projectsPage.title}</h1><p>{content.projectsPage.intro}</p></div>
       </header>
       <ProjectList content={content} projects={projects} />

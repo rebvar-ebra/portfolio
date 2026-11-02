@@ -161,7 +161,7 @@ export type SiteContent = {
     typeLabel: string;
     linksLabel: string;
   };
-  projectsPage: { title: string; intro: string };
+  projectsPage: { label: string; title: string; intro: string };
   about: {
     label: string;
     title: string;
@@ -273,6 +273,7 @@ const englishContent: SiteContent = {
     linksLabel: "Links",
   },
   projectsPage: {
+    label: "Project archive",
     title: "Work, decisions, and what I learned.",
     intro: "Four case studies spanning professional product work, full-stack product design, and live websites for businesses and nonprofits.",
   },
@@ -498,6 +499,7 @@ const germanContent: SiteContent = {
     linksLabel: "Links",
   },
   projectsPage: {
+    label: "Projektarchiv",
     title: "Arbeit, Entscheidungen und Erkenntnisse.",
     intro: "Vier Fallstudien aus professioneller Produktarbeit, Full-Stack-Produktgestaltung und Live-Websites für Unternehmen und gemeinnützige Organisationen.",
   },

@@ -15,6 +15,7 @@ test-results/
 .venv/
 .e2e-deps/
 artifacts/
+.release/
 web/.next/
 api/portfolio-api
 docs

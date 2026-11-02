@@ -11,3 +11,5 @@ export const sanityClient = createClient({
   useCdn: true,
 });
 
+export const sanityFreshClient = sanityClient.withConfig({ useCdn: false });
+

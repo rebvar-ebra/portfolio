@@ -34,6 +34,7 @@ describe("parseContactSubmission", () => {
     ["message too long", { message: "m".repeat(5001) }],
     ["missing consent", { consent: false }],
     ["invalid UUID", { submissionId: "not-a-uuid" }],
+    ["invalid honeypot type", { website: 42 }],
     ["non-object input", null],
   ])("rejects %s", (_label, overrides) => {
     const input = overrides === null ? null : validPayload(overrides);

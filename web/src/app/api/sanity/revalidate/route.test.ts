@@ -2,10 +2,10 @@ import { describe, expect, it } from "vitest";
 
 import { createRevalidateHandler, type WebhookParser } from "./route";
 
-const request = () => new Request("https://rebvar.xyz/api/sanity/revalidate", {
+const request = (body = JSON.stringify({ _type: "portfolioProject" })) => new Request("https://rebvar.xyz/api/sanity/revalidate", {
   method: "POST",
   headers: { "content-type": "application/json" },
-  body: JSON.stringify({ _type: "portfolioProject" }),
+  body,
 });
 
 const parser = (result: Awaited<ReturnType<WebhookParser>>): WebhookParser => async () => result;
@@ -27,6 +27,18 @@ describe("Sanity revalidation webhook", () => {
     expect(response.status).toBe(401);
   });
 
+  it("rejects an oversized streamed body without relying on content-length", async () => {
+    const handler = createRevalidateHandler(
+      async () => { throw new Error("parser must not receive oversized input"); },
+      () => undefined,
+      "secret",
+    );
+
+    const response = await handler(request(JSON.stringify({ value: "x".repeat(66_000) })));
+
+    expect(response.status).toBe(413);
+  });
+
   it("ignores signed events for unrelated document types", async () => {
     const invalidated: string[] = [];
     const handler = createRevalidateHandler(
@@ -43,16 +55,24 @@ describe("Sanity revalidation webhook", () => {
 
   it("invalidates portfolio caches for a valid signed event", async () => {
     const invalidated: string[] = [];
+    let freshReads = 0;
+    let waitedForConsistency = false;
     const handler = createRevalidateHandler(
-      parser({ body: { _type: "portfolioProject" }, isValidSignature: true }),
+      async (_request, _secret, waitForConsistency) => {
+        waitedForConsistency = waitForConsistency;
+        return { body: { _type: "portfolioProject" }, isValidSignature: true };
+      },
       (tag) => invalidated.push(tag),
       "secret",
+      () => { freshReads += 1; },
     );
 
     const response = await handler(request());
 
     expect(response.status).toBe(200);
     expect(invalidated).toEqual(["portfolio"]);
+    expect(freshReads).toBe(1);
+    expect(waitedForConsistency).toBe(true);
   });
 });
 

@@ -2,7 +2,8 @@ import { getSiteContent, projects as checkedInProjects, type ProjectCopy, type P
 import { locales, type Locale } from "@/lib/i18n";
 import { hasSanityConfig } from "@/sanity/env";
 
-import { sanityClient } from "./client";
+import { portfolioFreshReadWindow } from "./cache-state";
+import { sanityClient, sanityFreshClient } from "./client";
 import { portfolioQuery } from "./queries";
 
 type UnknownRecord = Record<string, unknown>;
@@ -18,6 +19,8 @@ type SourceLoader = () => Promise<PortfolioSource>;
 const isRecord = (value: unknown): value is UnknownRecord => Boolean(value) && typeof value === "object" && !Array.isArray(value);
 const isString = (value: unknown): value is string => typeof value === "string";
 const isStringArray = (value: unknown): value is string[] => Array.isArray(value) && value.every(isString);
+const valueOr = (value: unknown, fallback: string) => isString(value) ? value : fallback;
+const arrayOr = <T>(value: unknown, fallback: readonly T[]) => Array.isArray(value) ? value as T[] : fallback;
 const safeHttpsUrl = (value: unknown) => isString(value) && /^https:\/\/[^\s]+$/i.test(value) ? value : null;
 const safeCover = (value: unknown) => isString(value) && (value.startsWith("/project-covers/") || /^https:\/\/cdn\.sanity\.io\//i.test(value)) ? value : null;
 
@@ -78,30 +81,115 @@ const projectDefinition = (raw: UnknownRecord): ProjectDefinition | null => {
 
 const fallback = (locale: Locale): PortfolioResult => ({ content: getSiteContent(locale), projects: [...checkedInProjects] });
 
+const localizedContent = (
+  locale: Locale,
+  localized: unknown,
+  linkedin: string,
+): SiteContent => {
+  const base = getSiteContent(locale);
+  if (!isRecord(localized)) return { ...base, person: { ...base.person, linkedin } };
+
+  const person = isRecord(localized.person) ? localized.person : {};
+  const home = isRecord(localized.home) ? localized.home : {};
+  const common = isRecord(localized.common) ? localized.common : {};
+  const projectsPage = isRecord(localized.projectsPage) ? localized.projectsPage : {};
+  const about = isRecord(localized.about) ? localized.about : {};
+  const contact = isRecord(localized.contact) ? localized.contact : {};
+  const footer = isRecord(localized.footer) ? localized.footer : {};
+
+  const mappedCommon = Object.fromEntries(
+    Object.entries(base.common).map(([key, fallbackValue]) => [key, valueOr(common[key], fallbackValue)]),
+  ) as SiteContent["common"];
+  const mappedContact = Object.fromEntries(
+    Object.entries(base.contact).map(([key, fallbackValue]) => [key, valueOr(contact[key], fallbackValue)]),
+  ) as SiteContent["contact"];
+
+  return {
+    locale,
+    languageName: base.languageName,
+    person: {
+      ...base.person,
+      name: valueOr(person.name, base.person.name) as SiteContent["person"]["name"],
+      role: valueOr(person.role, base.person.role),
+      location: valueOr(person.location, base.person.location),
+      introduction: valueOr(person.introduction, base.person.introduction),
+      linkedin,
+    },
+    navigation: navigationFor(locale, localized.navigation, base.navigation),
+    home: {
+      headline: valueOr(home.headline, base.home.headline),
+      intro: valueOr(home.intro, base.home.intro),
+      primaryAction: {
+        label: valueOr(home.primaryActionLabel, base.home.primaryAction.label),
+        href: `/${locale}/projects`,
+      },
+      contactAction: {
+        label: valueOr(home.contactActionLabel, base.home.contactAction.label),
+        href: `/${locale}/contact`,
+      },
+      approachTitle: valueOr(home.approachTitle, base.home.approachTitle),
+      approach: base.home.approach,
+      selectedWork: valueOr(home.selectedWork, base.home.selectedWork),
+      workLabel: valueOr(home.workLabel, base.home.workLabel),
+      methodLabel: valueOr(home.methodLabel, base.home.methodLabel),
+      requestPath: base.home.requestPath,
+      approachSteps: arrayOr<SiteContent["home"]["approachSteps"][number]>(home.approachSteps, base.home.approachSteps),
+    },
+    common: mappedCommon,
+    projectsPage: {
+      label: valueOr(projectsPage.label, base.projectsPage.label),
+      title: valueOr(projectsPage.title, base.projectsPage.title),
+      intro: valueOr(projectsPage.intro, base.projectsPage.intro),
+    },
+    about: {
+      label: valueOr(about.label, base.about.label),
+      title: valueOr(about.title, base.about.title),
+      intro: valueOr(about.intro, base.about.intro),
+      experienceTitle: valueOr(about.experienceTitle, base.about.experienceTitle),
+      educationTitle: valueOr(about.educationTitle, base.about.educationTitle),
+      skillsTitle: valueOr(about.skillsTitle, base.about.skillsTitle),
+      languagesTitle: valueOr(about.languagesTitle, base.about.languagesTitle),
+      certificationsTitle: valueOr(about.certificationsTitle, base.about.certificationsTitle),
+      learningTitle: valueOr(about.learningTitle, base.about.learningTitle),
+      learning: valueOr(about.learning, base.about.learning),
+      experience: arrayOr<SiteContent["about"]["experience"][number]>(about.experience, base.about.experience),
+      education: arrayOr<SiteContent["about"]["education"][number]>(about.education, base.about.education),
+      languages: arrayOr<SiteContent["about"]["languages"][number]>(about.languages, base.about.languages),
+      certifications: arrayOr<SiteContent["about"]["certifications"][number]>(about.certifications, base.about.certifications),
+      skills: arrayOr<SiteContent["about"]["skills"][number]>(about.skills, base.about.skills),
+    },
+    contact: mappedContact,
+    projectCopy: [],
+    footer: {
+      note: valueOr(footer.note, base.footer.note),
+      availability: valueOr(footer.availability, base.footer.availability),
+    },
+  };
+};
+
 const mapSource = (source: PortfolioSource, locale: Locale): PortfolioResult => {
   if (!source.settings && source.projects.length === 0) return fallback(locale);
 
-  const slugs = source.projects.map((item) => item.slug).filter(isString);
-  if (new Set(slugs).size !== slugs.length) throw new Error("Duplicate portfolio project slug");
+  const slugCounts = new Map<string, number>();
+  for (const item of source.projects) {
+    if (isString(item.slug)) slugCounts.set(item.slug, (slugCounts.get(item.slug) ?? 0) + 1);
+  }
 
   const mapped = source.projects
-    .map((raw) => ({ definition: projectDefinition(raw), copy: projectCopy(raw, locale) }))
-    .filter((item): item is { definition: ProjectDefinition; copy: ProjectCopy } => Boolean(item.definition && item.copy));
+    .filter((raw) => !isString(raw.slug) || slugCounts.get(raw.slug) === 1)
+    .flatMap((raw) => {
+      const definition = projectDefinition(raw);
+      const english = projectCopy(raw, "en");
+      const german = projectCopy(raw, "de");
+      if (!definition || !english || !german) return [];
+      return [{ definition, copy: locale === "de" ? german : english }];
+    });
 
   const base = getSiteContent(locale);
   const localized = source.settings?.[localeKey(locale)];
-  const cms = isRecord(localized) ? localized : null;
-  const cmsPerson = cms && isRecord(cms.person) ? cms.person : null;
   const linkedin = safeHttpsUrl(source.settings?.linkedin) ?? base.person.linkedin;
-
-  const content: SiteContent = {
-    ...base,
-    ...(cms ?? {}),
-    locale,
-    person: { ...base.person, ...(cmsPerson ?? {}), linkedin },
-    navigation: navigationFor(locale, cms?.navigation, base.navigation),
-    projectCopy: mapped.map(({ copy }) => copy),
-  } as SiteContent;
+  const content = localizedContent(locale, localized, linkedin);
+  content.projectCopy = mapped.map(({ copy }) => copy);
 
   return { content, projects: mapped.map(({ definition }) => definition) };
 };
@@ -133,7 +221,8 @@ export const createPortfolioRepository = (load: SourceLoader) => {
 
 const loadSanityPortfolio: SourceLoader = async () => {
   if (!hasSanityConfig) return { settings: null, projects: [] };
-  return sanityClient.fetch<PortfolioSource>(portfolioQuery, {}, { next: { revalidate: 60, tags: ["portfolio"] } });
+  const client = portfolioFreshReadWindow.shouldBypass() ? sanityFreshClient : sanityClient;
+  return client.fetch<PortfolioSource>(portfolioQuery, {}, { next: { revalidate: 60, tags: ["portfolio"] } });
 };
 
 const repository = createPortfolioRepository(loadSanityPortfolio);

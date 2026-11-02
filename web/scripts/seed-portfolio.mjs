@@ -63,10 +63,7 @@ const localeDocument = (locale) => {
       approachSteps: content.home.approachSteps,
     },
     common: content.common,
-    projectsPage: {
-      label: locale === "en" ? "Project archive" : "Projektarchiv",
-      ...content.projectsPage,
-    },
+    projectsPage: content.projectsPage,
     about: content.about,
     contact: {
       label: content.contact.label,

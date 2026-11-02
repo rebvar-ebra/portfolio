@@ -40,7 +40,9 @@ def run_desktop_flow(page: Page) -> None:
 
     page.get_by_role("link", name="Contact", exact=True).click()
     page.wait_for_url("**/en/contact")
-    page.get_by_role("link", name="rebvar.ebrahimy@gmail.com").wait_for()
+    page.get_by_role("heading", name="Send a message").wait_for()
+    page.get_by_label("Email").wait_for()
+    assert page.locator('a[href^="mailto:"]').count() == 0
     page.screenshot(path=ARTIFACTS / "desktop-contact.png", full_page=True)
 
     page.goto(f"{BASE_URL}/en/projects/neuer-tag-ev", wait_until="networkidle")

@@ -103,6 +103,13 @@ describe("POST /api/contact", () => {
     expect(transport).toHaveBeenCalledTimes(1);
   });
 
+  it("does not let a caller bypass the limit by spoofing forwarded addresses", async () => {
+    const { handler, transport } = setup({ maxRequests: 1 });
+    expect((await handler(request({ forwardedFor: "203.0.113.10" }))).status).toBe(200);
+    expect((await handler(request({ forwardedFor: "198.51.100.25" }))).status).toBe(429);
+    expect(transport).toHaveBeenCalledTimes(1);
+  });
+
   it("uses the client UUID as the provider idempotency key", async () => {
     const { handler, transport } = setup();
     expect((await handler(request())).status).toBe(200);

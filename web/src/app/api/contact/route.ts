@@ -29,20 +29,30 @@ type RateLimiter = { allow(key: string): boolean };
 export const createMemoryRateLimiter = ({
   maxRequests = 3,
   windowMs = 15 * 60_000,
+  maxKeys = 1_000,
   now = Date.now,
 }: {
   maxRequests?: number;
   windowMs?: number;
+  maxKeys?: number;
   now?: () => number;
 } = {}): RateLimiter => {
   const attempts = new Map<string, number[]>();
 
   return {
     allow(key) {
-      const threshold = now() - windowMs;
+      const currentTime = now();
+      const threshold = currentTime - windowMs;
+      for (const [storedKey, timestamps] of attempts) {
+        if (!timestamps.some((timestamp) => timestamp > threshold)) attempts.delete(storedKey);
+      }
+      if (!attempts.has(key) && attempts.size >= maxKeys) {
+        const oldestKey = attempts.keys().next().value;
+        if (oldestKey) attempts.delete(oldestKey);
+      }
       const recent = (attempts.get(key) ?? []).filter((timestamp) => timestamp > threshold);
       if (recent.length >= maxRequests) return false;
-      recent.push(now());
+      recent.push(currentTime);
       attempts.set(key, recent);
       return true;
     },
@@ -60,11 +70,7 @@ const isSameOrigin = (origin: string | null, siteOrigin: string | undefined) => 
   }
 };
 
-const limiterKey = (request: Request, email: string) => {
-  const forwardedAddress = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "";
-  const emailHash = createHash("sha256").update(email).digest("hex");
-  return forwardedAddress ? `${forwardedAddress}:${emailHash}` : emailHash;
-};
+const limiterKey = (email: string) => createHash("sha256").update(email).digest("hex");
 
 export const createContactHandler = ({
   transport,
@@ -112,7 +118,7 @@ export const createContactHandler = ({
     if (parsed.reason === "spam") return Response.json({ code: "sent" });
     return Response.json({ code: "invalid_submission" }, { status: 400 });
   }
-  if (!limiter.allow(limiterKey(request, parsed.value.email))) {
+  if (!limiter.allow(limiterKey(parsed.value.email))) {
     return Response.json({ code: "rate_limited" }, { status: 429 });
   }
 

@@ -6,10 +6,9 @@ Bilingual portfolio for Rebvar Ebrahimi, a full-stack developer in Berlin. The p
 
 - Next.js 16 App Router, React 19, and TypeScript
 - Tailwind CSS 4 with a small token-based global stylesheet
-- Static generation for English and German pages
+- Sanity-backed English and German content with an embedded editor at `/studio`
+- Server-side contact delivery through Resend without publishing the recipient address
 - Docker standalone output for self-hosted deployment
-
-The portfolio intentionally has no runtime API or database. Project content is statically generated, which keeps deployment and maintenance simple.
 
 ## Local development
 
@@ -20,9 +19,7 @@ pnpm install --frozen-lockfile
 pnpm --dir web dev
 ```
 
-Open [http://localhost:3000/en](http://localhost:3000/en).
-
-No environment variables are required. Local `.env*` files are ignored. If variables are added later, commit only a redacted `.env.example` containing placeholders.
+Copy `.env.example` to an ignored local environment file and provide the server-only contact and webhook secrets. The public Sanity defaults point to project `x34rtnfv` and dataset `production`. Then open [http://localhost:3000/en](http://localhost:3000/en).
 
 ## Quality checks
 
@@ -33,7 +30,7 @@ pnpm --dir web lint
 pnpm --dir web build
 ```
 
-The production build currently pre-renders all localized portfolio and project routes.
+The production build statically generates known localized routes and revalidates portfolio content from Sanity at runtime.
 
 ## Docker
 
@@ -56,6 +53,8 @@ The script checks English desktop navigation, German mobile navigation, keyboard
 
 ## Deployment
 
-The repository is configured for `https://rebvar.xyz`. Build the `web` image or upload the output produced by `pnpm --dir web build` using the hosting workflow for that domain.
+The repository is configured for `https://rebvar.xyz`. Build the `web` image or upload the Next.js standalone output using the hosting workflow for that domain. Production needs the variables documented in `.env.example`; `RESEND_API_KEY`, `CONTACT_TO_EMAIL`, `CONTACT_FROM_EMAIL`, and `SANITY_REVALIDATE_SECRET` must remain server-only.
+
+Sanity must allow credentialed CORS from `https://rebvar.xyz`. Configure a signed webhook for `portfolioSiteSettings` and `portfolioProject` publish/update/delete events at `https://rebvar.xyz/api/sanity/revalidate`, using the same `SANITY_REVALIDATE_SECRET` as the host.
 
 Security-related configuration includes removal of the `X-Powered-By` header, clickjacking protection, MIME sniffing protection, a strict referrer policy, and a restrictive permissions policy.
