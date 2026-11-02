@@ -3,7 +3,7 @@ import type { Locale } from "@/lib/i18n";
 export type ProjectKind = "professional" | "demo" | "learning";
 
 export type ProjectDefinition = {
-  slug: "3d-scan-platform" | "restaurant-operations" | "neuer-tag-ev";
+  slug: "bunex-smashburger" | "3d-scan-platform" | "restaurant-operations" | "neuer-tag-ev";
   kind: ProjectKind;
   technologies: readonly string[];
   publicSafe: boolean;
@@ -14,6 +14,16 @@ export type ProjectDefinition = {
 };
 
 export const projects: readonly ProjectDefinition[] = [
+  {
+    slug: "bunex-smashburger",
+    kind: "professional",
+    technologies: ["Next.js", "TypeScript", "Tailwind CSS", "Framer Motion", "Vercel"],
+    publicSafe: true,
+    hasConfidentialSource: false,
+    liveUrl: "https://bunexsmashburger.de/",
+    repositoryUrl: "https://github.com/rebvar-ebra/bunex",
+    coverImage: "/project-covers/bunex-smashburger.svg",
+  },
   {
     slug: "3d-scan-platform",
     kind: "professional",
@@ -247,7 +257,7 @@ const englishContent: SiteContent = {
   },
   projectsPage: {
     title: "Work, decisions, and what I learned.",
-    intro: "Three case studies spanning professional product work, full-stack product design, and a live nonprofit website.",
+    intro: "Four case studies spanning professional product work, full-stack product design, and live websites for businesses and nonprofits.",
   },
   about: {
     label: "Profile",
@@ -341,6 +351,19 @@ const englishContent: SiteContent = {
     note: "This site does not publish my phone number or street address and does not send form data to a third party.",
   },
   projectCopy: [
+    {
+      slug: "bunex-smashburger",
+      title: "BUNEX Smashburger",
+      label: "Live restaurant website · 2026",
+      summary: "A conversion-focused website for a smashburger restaurant in Teltow, with an interactive menu and direct ordering paths.",
+      problem: "BUNEX needed a distinctive website that could communicate its food quality, help guests choose quickly, and move them from browsing to ordering or visiting the restaurant.",
+      role: "Developed the public website end to end, including the responsive interface, interactive menu, local favorites, accessible controls, and production delivery.",
+      solution: "A fast Next.js experience combines product photography, filterable menu categories, browser-local favorites, direct online ordering, Google reviews, and practical visit information in one focused journey.",
+      decisions: ["Lead with real product photography and a bold editorial visual system.", "Let guests filter beef, chicken, veggie, and side dishes without leaving the page.", "Keep favorites private in the visitor’s browser and connect ordering to the restaurant’s existing online menu."],
+      challenges: ["Making a bold brand clear and usable across screen sizes.", "Presenting menu choices, prices, allergens, ordering, and visit details without visual overload.", "Balancing expressive motion with pause controls and accessible navigation."],
+      learning: "The project strengthened my practice in conversion-focused restaurant UX, responsive product presentation, lightweight client-side personalization, and accessible motion.",
+      disclosure: null,
+    },
     {
       slug: "3d-scan-platform",
       title: "3D Scan Platform",
@@ -451,7 +474,7 @@ const germanContent: SiteContent = {
   },
   projectsPage: {
     title: "Arbeit, Entscheidungen und Erkenntnisse.",
-    intro: "Drei Fallstudien aus professioneller Produktarbeit, Full-Stack-Produktgestaltung und einer live geschalteten Non-Profit-Website.",
+    intro: "Vier Fallstudien aus professioneller Produktarbeit, Full-Stack-Produktgestaltung und Live-Websites für Unternehmen und gemeinnützige Organisationen.",
   },
   about: {
     label: "Profil",
@@ -545,6 +568,19 @@ const germanContent: SiteContent = {
     note: "Diese Website veröffentlicht weder meine Telefonnummer noch meine Straßenadresse und sendet keine Formulardaten an Dritte.",
   },
   projectCopy: [
+    {
+      slug: "bunex-smashburger",
+      title: "BUNEX Smashburger",
+      label: "Live-Restaurant-Website · 2026",
+      summary: "Eine conversionorientierte Website für ein Smashburger-Restaurant in Teltow – mit interaktiver Speisekarte und direkten Bestellwegen.",
+      problem: "BUNEX benötigte eine eigenständige Website, die die Qualität der Produkte vermittelt, Gästen eine schnelle Auswahl ermöglicht und sie gezielt zur Bestellung oder zum Restaurantbesuch führt.",
+      role: "Entwicklung der öffentlichen Website von der responsiven Oberfläche über interaktive Speisekarte, lokale Favoriten und barrierearme Bedienelemente bis zur produktiven Bereitstellung.",
+      solution: "Eine schnelle Next.js-Anwendung verbindet Produktfotografie, filterbare Menü-Kategorien, lokal im Browser gespeicherte Favoriten, direkte Online-Bestellung, Google-Bewertungen und praktische Besuchsinformationen in einem fokussierten Nutzerfluss.",
+      decisions: ["Echte Produktfotografie mit einem markanten redaktionellen Designsystem in den Mittelpunkt stellen.", "Gerichte aus Beef, Chicken, Veggie und Beilagen direkt auf der Seite filterbar machen.", "Favoriten privat im Browser speichern und die Bestellung mit der bestehenden Online-Speisekarte verbinden."],
+      challenges: ["Eine ausdrucksstarke Marke auf allen Bildschirmgrößen klar und gut bedienbar umsetzen.", "Gerichte, Preise, Allergene, Bestellung und Besuchsinformationen ohne visuelle Überladung darstellen.", "Ausdrucksstarke Bewegung mit Pausensteuerung und barrierearmer Navigation verbinden."],
+      learning: "Das Projekt vertiefte meine Erfahrung mit conversionorientierter Restaurant-UX, responsiver Produktdarstellung, leichtgewichtiger Personalisierung im Browser und barrierearmer Bewegung.",
+      disclosure: null,
+    },
     {
       slug: "3d-scan-platform",
       title: "3D-Scan-Plattform",

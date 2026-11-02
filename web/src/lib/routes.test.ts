@@ -10,9 +10,11 @@ import {
 describe("localized portfolio routes", () => {
   it("generates one project path per locale and public project", () => {
     expect(getLocalizedProjectPaths()).toEqual([
+      { locale: "en", slug: "bunex-smashburger" },
       { locale: "en", slug: "3d-scan-platform" },
       { locale: "en", slug: "restaurant-operations" },
       { locale: "en", slug: "neuer-tag-ev" },
+      { locale: "de", slug: "bunex-smashburger" },
       { locale: "de", slug: "3d-scan-platform" },
       { locale: "de", slug: "restaurant-operations" },
       { locale: "de", slug: "neuer-tag-ev" },

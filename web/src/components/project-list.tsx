@@ -5,7 +5,7 @@ export function ProjectList({ content, limit }: { content: SiteContent; limit?: 
   const visibleProjects = limit ? projects.slice(0, limit) : projects;
 
   return (
-    <div className="mt-12 grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3 lg:gap-x-8">
+    <div className="mt-12 grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:gap-x-8">
       {visibleProjects.map((definition) => {
         const copy = content.projectCopy.find((item) => item.slug === definition.slug);
         if (!copy) return null;

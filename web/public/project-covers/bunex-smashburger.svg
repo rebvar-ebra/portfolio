@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-labelledby="title desc">
+  <title id="title">BUNEX Smashburger website cover</title>
+  <desc id="desc">Bold editorial composition with a stylized smashburger and menu interface</desc>
+  <rect width="1200" height="900" fill="#f4eadb"/>
+  <rect x="0" y="0" width="1200" height="92" fill="#171717"/>
+  <text x="80" y="62" fill="#f4eadb" font-family="Arial, Helvetica, sans-serif" font-size="38" font-weight="900" letter-spacing="5">BUNEX</text>
+  <circle cx="1085" cy="95" r="210" fill="#f2c94c"/>
+  <path d="M0 692C198 609 365 646 535 740c161 90 354 122 665 25v135H0Z" fill="#e84c32"/>
+  <g transform="translate(94 190)">
+    <text x="0" y="0" fill="#171717" font-family="Arial, Helvetica, sans-serif" font-size="27" font-weight="800" letter-spacing="3">SMASHBURGER IN TELTOW</text>
+    <text x="0" y="102" fill="#171717" font-family="Arial, Helvetica, sans-serif" font-size="86" font-weight="900">
+      <tspan x="0" dy="0">SMASH MIT</tspan>
+      <tspan x="0" dy="88">KANTE.</tspan>
+    </text>
+    <text x="4" y="326" fill="#4a4239" font-family="Arial, Helvetica, sans-serif" font-size="26">Saftig bis zum letzten Biss.</text>
+    <rect x="0" y="382" width="208" height="66" rx="33" fill="#171717"/>
+    <text x="104" y="424" text-anchor="middle" fill="#f4eadb" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="800">LIVE WEBSITE</text>
+  </g>
+  <g transform="translate(688 250) rotate(5)">
+    <ellipse cx="230" cy="364" rx="238" ry="35" fill="#bd3829" opacity=".24"/>
+    <path d="M48 116c13-82 84-116 182-116s169 34 182 116Z" fill="#e7ad50" stroke="#171717" stroke-width="9"/>
+    <circle cx="125" cy="52" r="7" fill="#f7df9e"/><circle cx="211" cy="34" r="7" fill="#f7df9e"/><circle cx="300" cy="56" r="7" fill="#f7df9e"/>
+    <path d="M48 130h364l-30 54H78Z" fill="#5fb35c" stroke="#171717" stroke-width="9"/>
+    <path d="M72 188h316l24 76H48Z" fill="#f2c94c" stroke="#171717" stroke-width="9"/>
+    <path d="M46 252c61-32 111-14 159 7 50 22 101 40 209-7v70H46Z" fill="#66351f" stroke="#171717" stroke-width="9"/>
+    <path d="M64 318h332l22 62H42Z" fill="#e7ad50" stroke="#171717" stroke-width="9"/>
+  </g>
+  <g transform="translate(680 715)">
+    <rect width="116" height="45" rx="22" fill="#171717"/><text x="58" y="29" text-anchor="middle" fill="#f4eadb" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="800">BEEF</text>
+    <rect x="128" width="126" height="45" rx="22" fill="#f4eadb" stroke="#171717" stroke-width="3"/><text x="191" y="29" text-anchor="middle" fill="#171717" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="800">CHICKEN</text>
+    <rect x="266" width="116" height="45" rx="22" fill="#f4eadb" stroke="#171717" stroke-width="3"/><text x="324" y="29" text-anchor="middle" fill="#171717" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="800">VEGGIE</text>
+  </g>
+</svg>

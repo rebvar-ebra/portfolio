@@ -76,6 +76,21 @@ describe("portfolio content", () => {
     expect(copy?.title).toBe("Neuer Tag e.V.");
   });
 
+  it.each(["en", "de"] as const)("publishes the BUNEX case study in %s", (locale) => {
+    const definition = projects.find((project) => project.slug === "bunex-smashburger");
+    const copy = getSiteContent(locale).projectCopy.find(
+      (project) => project.slug === "bunex-smashburger",
+    );
+
+    expect(definition).toMatchObject({
+      kind: "professional",
+      liveUrl: "https://bunexsmashburger.de/",
+      repositoryUrl: "https://github.com/rebvar-ebra/bunex",
+      technologies: ["Next.js", "TypeScript", "Tailwind CSS", "Framer Motion", "Vercel"],
+    });
+    expect(copy?.title).toBe("BUNEX Smashburger");
+  });
+
   it.each(["en", "de"] as const)("lists Sanity in the %s backend skills", (locale) => {
     const content = getSiteContent(locale);
     const backend = content.about.skills.find((group) =>
