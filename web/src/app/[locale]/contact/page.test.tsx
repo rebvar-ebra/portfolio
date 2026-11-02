@@ -4,12 +4,15 @@ import { describe, expect, it } from "vitest";
 import ContactPage from "./page";
 
 describe("ContactPage", () => {
-  it("renders the CV-verified professional channels without publishing private CV details", async () => {
+  it("renders the private contact form and LinkedIn without publishing a direct email", async () => {
     const markup = renderToStaticMarkup(await ContactPage({ params: Promise.resolve({ locale: "en" }) }));
 
-    expect(markup).toContain('href="mailto:rebvar.ebrahimy@gmail.com"');
+    expect(markup).toContain('<form');
+    expect(markup).toContain('name="email"');
+    expect(markup).toContain('name="message"');
     expect(markup).toContain('href="https://linkedin.com/in/rebvar-ebrahimi"');
+    expect(markup).not.toContain("mailto:");
+    expect(markup).not.toContain("rebvar.ebrahimy@gmail.com");
     expect(markup).not.toContain('href="tel:');
-    expect(markup).toContain("does not publish my phone number or street address");
   });
 });

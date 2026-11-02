@@ -31,7 +31,7 @@ describe("portfolio content", () => {
   it("publishes only CV-verified contact links", () => {
     const content = getSiteContent("en");
 
-    expect(content.person.email).toBe("rebvar.ebrahimy@gmail.com");
+    expect("email" in content.person).toBe(false);
     expect(content.person.linkedin).toBe("https://linkedin.com/in/rebvar-ebrahimi");
     expect(content.person.github).toBeNull();
     expect(content.person.resume).toBeNull();

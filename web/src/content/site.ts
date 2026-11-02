@@ -119,7 +119,6 @@ export type SiteContent = {
     name: "Rebvar Ebrahimi";
     role: string;
     location: string;
-    email: string;
     github: null;
     linkedin: string;
     resume: null;
@@ -184,8 +183,17 @@ export type SiteContent = {
     label: string;
     title: string;
     intro: string;
-    directTitle: string;
+    formTitle: string;
+    nameLabel: string;
     emailLabel: string;
+    subjectLabel: string;
+    messageLabel: string;
+    consentLabel: string;
+    submitLabel: string;
+    submittingLabel: string;
+    successMessage: string;
+    errorMessage: string;
+    uncertainMessage: string;
     linkedinLabel: string;
     note: string;
   };
@@ -197,7 +205,6 @@ const route = (locale: Locale, path = "") => `/${locale}${path}`;
 
 const sharedPerson = {
   name: "Rebvar Ebrahimi" as const,
-  email: "rebvar.ebrahimy@gmail.com",
   github: null,
   linkedin: "https://linkedin.com/in/rebvar-ebrahimi",
   resume: null,
@@ -353,12 +360,20 @@ const englishContent: SiteContent = {
   contact: {
     label: "Contact",
     title: "Let’s talk about useful software.",
-    intro:
-      "I’m based in Berlin and open to full-stack and frontend opportunities. The quickest way to reach me is by email.",
-    directTitle: "Professional channels",
+    intro: "Use the form to tell me about the role, project, or problem you would like to discuss.",
+    formTitle: "Send a message",
+    nameLabel: "Name",
     emailLabel: "Email",
+    subjectLabel: "Subject",
+    messageLabel: "Message",
+    consentLabel: "I agree that my details may be used to answer this message.",
+    submitLabel: "Send message",
+    submittingLabel: "Sending…",
+    successMessage: "Thanks — your message has been sent.",
+    errorMessage: "The message could not be sent. Please try again in a moment.",
+    uncertainMessage: "Delivery could not be confirmed. Please wait before trying again.",
     linkedinLabel: "LinkedIn",
-    note: "This site does not publish my phone number or street address and does not send form data to a third party.",
+    note: "Your details are used only to answer your message and are delivered through a secure email provider.",
   },
   projectCopy: [
     {
@@ -570,12 +585,20 @@ const germanContent: SiteContent = {
   contact: {
     label: "Kontakt",
     title: "Sprechen wir über nützliche Software.",
-    intro:
-      "Ich lebe in Berlin und bin offen für Full-Stack- und Frontend-Möglichkeiten. Am schnellsten bin ich per E-Mail erreichbar.",
-    directTitle: "Berufliche Kontaktwege",
+    intro: "Nutze das Formular, um mir von der Stelle, dem Projekt oder der Aufgabe zu erzählen, die du besprechen möchtest.",
+    formTitle: "Nachricht senden",
+    nameLabel: "Name",
     emailLabel: "E-Mail",
+    subjectLabel: "Betreff",
+    messageLabel: "Nachricht",
+    consentLabel: "Ich stimme zu, dass meine Angaben zur Beantwortung dieser Nachricht verwendet werden.",
+    submitLabel: "Nachricht senden",
+    submittingLabel: "Wird gesendet…",
+    successMessage: "Danke — deine Nachricht wurde gesendet.",
+    errorMessage: "Die Nachricht konnte nicht gesendet werden. Bitte versuche es gleich noch einmal.",
+    uncertainMessage: "Die Zustellung konnte nicht bestätigt werden. Bitte warte vor einem neuen Versuch.",
     linkedinLabel: "LinkedIn",
-    note: "Diese Website veröffentlicht weder meine Telefonnummer noch meine Straßenadresse und sendet keine Formulardaten an Dritte.",
+    note: "Deine Angaben werden nur zur Beantwortung deiner Nachricht verwendet und über einen sicheren E-Mail-Anbieter zugestellt.",
   },
   projectCopy: [
     {
