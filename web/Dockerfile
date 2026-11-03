@@ -3,7 +3,7 @@ WORKDIR /app
 RUN corepack enable
 COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
 COPY web/package.json web/package.json
-RUN pnpm install --frozen-lockfile --filter @rebvar-studio/web...
+RUN pnpm install --frozen-lockfile --filter @rebvar-studio/web... --prod
 
 FROM node:22-alpine AS builder
 WORKDIR /app
