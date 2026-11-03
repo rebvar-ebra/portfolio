@@ -55,8 +55,9 @@ def run_desktop_flow(page: Page) -> None:
     page.get_by_role("link", name="Visit live website").wait_for()
     page.screenshot(path=ARTIFACTS / "desktop-project.png", full_page=True)
 
-    studio_response = page.goto(f"{BASE_URL}/studio", wait_until="domcontentloaded")
-    assert studio_response and studio_response.ok, "embedded Sanity Studio should load"
+    studio_response = page.request.get(f"{BASE_URL}/studio", max_redirects=0)
+    assert studio_response.status in (307, 308), "portfolio should redirect to the hosted Sanity Studio"
+    assert studio_response.headers.get("location") == "https://rebvar-portfolio.sanity.studio/"
 
     cms_response = page.request.get(
         f"https://{SANITY_PROJECT_ID}.api.sanity.io/v{SANITY_API_VERSION}/data/query/{SANITY_DATASET}",

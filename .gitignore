@@ -3,6 +3,7 @@
 !.env.example
 !.env*.example
 .next/
+.sanity/
 node_modules/
 coverage/
 playwright-report/
@@ -17,6 +18,8 @@ test-results/
 artifacts/
 .release/
 web/.next/
+web/dist/
+studio/dist/
 api/portfolio-api
 docs
 rebvar-studio-release.tar.gz

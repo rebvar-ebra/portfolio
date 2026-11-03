@@ -1,5 +1,3 @@
-import { defineQuery } from "next-sanity";
-
 const localeFields = `
   person{name, role, location, introduction},
   navigation{home, projects, about, contact},
@@ -22,7 +20,7 @@ const projectLocaleFields = `
   title, label, summary, problem, role, solution, decisions, challenges, learning, disclosure
 `;
 
-export const portfolioQuery = defineQuery(`{
+export const portfolioQuery = `{
   "settings": *[_type == "portfolioSiteSettings" && _id == "portfolio-site-settings"][0]{
     linkedin,
     english{${localeFields}},
@@ -42,5 +40,5 @@ export const portfolioQuery = defineQuery(`{
     english{${projectLocaleFields}},
     german{${projectLocaleFields}}
   }
-}`);
+}`;
 

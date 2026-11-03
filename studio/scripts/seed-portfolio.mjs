@@ -1,6 +1,6 @@
 import { getCliClient } from "sanity/cli";
 
-import { getSiteContent, projects } from "../src/content/site.ts";
+import { getSiteContent, projects } from "../../web/src/content/site.ts";
 
 const isDryRun = process.argv.includes("--dry-run");
 

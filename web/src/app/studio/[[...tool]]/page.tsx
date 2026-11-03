@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
-import { NextStudio } from "next-sanity/studio";
-
-import config from "../../../../sanity.config";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Portfolio Studio",
@@ -9,6 +7,6 @@ export const metadata: Metadata = {
 };
 
 export default function StudioPage() {
-  return <NextStudio config={config} />;
+  redirect("https://rebvar-portfolio.sanity.studio/");
 }
 

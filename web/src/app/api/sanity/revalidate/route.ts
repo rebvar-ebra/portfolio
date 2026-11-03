@@ -1,6 +1,5 @@
+import { SIGNATURE_HEADER_NAME, isValidSignature } from "@sanity/webhook";
 import { revalidateTag } from "next/cache";
-import type { NextRequest } from "next/server";
-import { parseBody } from "next-sanity/webhook";
 
 import { portfolioFreshReadWindow } from "@/sanity/lib/cache-state";
 
@@ -76,8 +75,21 @@ export const createRevalidateHandler = (
   }
 };
 
-const parseWebhook: WebhookParser = (request, secret, waitForConsistency) =>
-  parseBody<WebhookBody>(request as NextRequest, secret, waitForConsistency);
+const parseWebhook: WebhookParser = async (request, secret, waitForConsistency) => {
+  const signature = request.headers.get(SIGNATURE_HEADER_NAME);
+  if (!signature) return { body: null, isValidSignature: null };
+
+  const rawBody = await request.text();
+  const validSignature = await isValidSignature(rawBody, signature, secret.trim());
+  if (validSignature && waitForConsistency) {
+    await new Promise((resolve) => setTimeout(resolve, 3_000));
+  }
+
+  return {
+    body: rawBody.trim() ? JSON.parse(rawBody) as WebhookBody : null,
+    isValidSignature: validSignature,
+  };
+};
 
 export const POST = createRevalidateHandler(
   parseWebhook,

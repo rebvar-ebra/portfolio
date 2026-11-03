@@ -1,0 +1,23 @@
+{
+  "name": "@rebvar-studio/studio",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "sanity build",
+    "deploy": "sanity deploy --url rebvar-portfolio --yes --schema-required",
+    "dev": "sanity dev",
+    "seed": "sanity exec scripts/seed-portfolio.mjs --with-user-token"
+  },
+  "dependencies": {
+    "@sanity/vision": "^6.21.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "sanity": "^6.21.0",
+    "styled-components": "^6.6.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "typescript": "^5.9.0"
+  }
+}

@@ -1,16 +1,15 @@
-"use client";
-
 import { visionTool } from "@sanity/vision";
 import { defineConfig } from "sanity";
 import { structureTool } from "sanity/structure";
 
-import { dataset, projectId } from "./src/sanity/env";
-import { schemaTypes } from "./src/sanity/schema";
+import { schemaTypes } from "./src/schema";
+
+const projectId = process.env.SANITY_STUDIO_PROJECT_ID ?? "x34rtnfv";
+const dataset = process.env.SANITY_STUDIO_DATASET ?? "production";
 
 export default defineConfig({
   name: "rebvar-portfolio",
   title: "Rebvar Portfolio",
-  basePath: "/studio",
   projectId,
   dataset,
   schema: { types: schemaTypes },
