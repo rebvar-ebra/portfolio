@@ -61,10 +61,19 @@ export const createMemoryRateLimiter = ({
 
 const sharedLimiter = createMemoryRateLimiter();
 
-const isSameOrigin = (origin: string | null, siteOrigin: string | undefined) => {
-  if (!origin || !siteOrigin) return false;
+const isLoopbackHost = (hostname: string) =>
+  hostname === "localhost" || hostname === "127.0.0.1" || hostname === "[::1]";
+
+const isSameOrigin = (origin: string | null, siteOrigin: string | undefined, requestUrl: string) => {
+  if (!origin) return false;
   try {
-    return new URL(origin).origin === new URL(siteOrigin).origin;
+    const submittedOrigin = new URL(origin);
+    const configuredOrigin = siteOrigin ? new URL(siteOrigin) : null;
+    if (configuredOrigin && submittedOrigin.origin === configuredOrigin.origin) return true;
+
+    const currentRequest = new URL(requestUrl);
+    return isLoopbackHost(submittedOrigin.hostname)
+      && submittedOrigin.origin === currentRequest.origin;
   } catch {
     return false;
   }
@@ -81,7 +90,7 @@ export const createContactHandler = ({
   config: ContactConfig;
   limiter?: RateLimiter;
 }) => async (request: Request) => {
-  if (!isSameOrigin(request.headers.get("origin"), config.siteOrigin)) {
+  if (!isSameOrigin(request.headers.get("origin"), config.siteOrigin, request.url)) {
     return Response.json({ code: "forbidden" }, { status: 403 });
   }
   if (!request.headers.get("content-type")?.toLowerCase().startsWith("application/json")) {

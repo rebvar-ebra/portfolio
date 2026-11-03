@@ -23,10 +23,11 @@ const config = {
 const request = (options: {
   body?: string;
   origin?: string;
+  url?: string;
   contentType?: string;
   contentLength?: string;
   forwardedFor?: string;
-} = {}) => new Request("https://rebvar.xyz/api/contact", {
+} = {}) => new Request(options.url ?? "https://rebvar.xyz/api/contact", {
   method: "POST",
   headers: {
     origin: options.origin ?? "https://rebvar.xyz",
@@ -56,6 +57,17 @@ describe("POST /api/contact", () => {
     const { handler, transport } = setup();
     expect((await handler(request({ origin: "https://evil.example" }))).status).toBe(403);
     expect(transport).not.toHaveBeenCalled();
+  });
+
+  it("accepts a same-origin request from the local development server", async () => {
+    const { handler, transport } = setup();
+    const response = await handler(request({
+      origin: "http://localhost:3001",
+      url: "http://localhost:3001/api/contact",
+    }));
+
+    expect(response.status).toBe(200);
+    expect(transport).toHaveBeenCalledTimes(1);
   });
 
   it("requires application/json", async () => {
