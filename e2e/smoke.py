@@ -9,7 +9,7 @@ from playwright.sync_api import Page, sync_playwright
 BASE_URL = os.getenv("E2E_BASE_URL", "http://127.0.0.1:3000")
 CHROME_PATH = os.getenv("CHROME_PATH", "/usr/bin/google-chrome") or None
 ARTIFACTS = Path(os.getenv("E2E_ARTIFACTS", "artifacts/e2e"))
-SANITY_PROJECT_ID = os.getenv("NEXT_PUBLIC_SANITY_PROJECT_ID", "x34rtnfv")
+SANITY_PROJECT_ID = os.getenv("NEXT_PUBLIC_SANITY_PROJECT_ID", "gxb80y9b")
 SANITY_DATASET = os.getenv("NEXT_PUBLIC_SANITY_DATASET", "production")
 SANITY_API_VERSION = os.getenv("NEXT_PUBLIC_SANITY_API_VERSION", "2026-11-02")
 

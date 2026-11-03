@@ -19,7 +19,7 @@ pnpm install --frozen-lockfile
 pnpm --dir web dev
 ```
 
-Copy `.env.example` to an ignored local environment file and provide the server-only contact and webhook secrets. The public Sanity defaults point to project `x34rtnfv` and dataset `production`. Then open [http://localhost:3000/en](http://localhost:3000/en).
+Copy `.env.example` to an ignored local environment file and provide the server-only contact and webhook secrets. The public Sanity defaults point to the dedicated portfolio project `gxb80y9b` and dataset `production`. Then open [http://localhost:3000/en](http://localhost:3000/en).
 
 ## Quality checks
 

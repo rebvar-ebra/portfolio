@@ -7,6 +7,6 @@ export const metadata: Metadata = {
 };
 
 export default function StudioPage() {
-  redirect("https://rebvar-portfolio.sanity.studio/");
+  redirect("https://studio.rebvar.xyz/");
 }
 
