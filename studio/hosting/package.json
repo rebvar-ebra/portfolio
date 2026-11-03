@@ -1,0 +1,8 @@
+{
+  "name": "rebvar-sanity-studio-host",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node app.js"
+  }
+}
