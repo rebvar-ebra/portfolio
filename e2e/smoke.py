@@ -9,6 +9,11 @@ from playwright.sync_api import Page, sync_playwright
 BASE_URL = os.getenv("E2E_BASE_URL", "http://127.0.0.1:3000")
 CHROME_PATH = os.getenv("CHROME_PATH", "/usr/bin/google-chrome") or None
 ARTIFACTS = Path(os.getenv("E2E_ARTIFACTS", "artifacts/e2e"))
+SANITY_PROJECT_ID = os.getenv("NEXT_PUBLIC_SANITY_PROJECT_ID", "x34rtnfv")
+SANITY_DATASET = os.getenv("NEXT_PUBLIC_SANITY_DATASET", "production")
+SANITY_API_VERSION = os.getenv("NEXT_PUBLIC_SANITY_API_VERSION", "2026-11-02")
+
+
 def assert_no_horizontal_overflow(page: Page) -> None:
     overflow = page.evaluate("document.documentElement.scrollWidth > document.documentElement.clientWidth")
     assert not overflow, "page has horizontal overflow"
@@ -49,6 +54,29 @@ def run_desktop_flow(page: Page) -> None:
     page.get_by_role("heading", name="Neuer Tag e.V.").wait_for()
     page.get_by_role("link", name="Visit live website").wait_for()
     page.screenshot(path=ARTIFACTS / "desktop-project.png", full_page=True)
+
+    studio_response = page.goto(f"{BASE_URL}/studio", wait_until="domcontentloaded")
+    assert studio_response and studio_response.ok, "embedded Sanity Studio should load"
+
+    cms_response = page.request.get(
+        f"https://{SANITY_PROJECT_ID}.api.sanity.io/v{SANITY_API_VERSION}/data/query/{SANITY_DATASET}",
+        params={
+            "perspective": "published",
+            "query": '{"settings": *[_id == "portfolio-site-settings"][0]._id, "projects": count(*[_type == "portfolioProject"])}',
+        },
+    )
+    assert cms_response.ok, "public Sanity query should succeed without a token"
+    cms_result = cms_response.json().get("result", {})
+    assert cms_result.get("settings") == "portfolio-site-settings", "published site settings should be public"
+    assert cms_result.get("projects") == 4, "all four published projects should be public"
+
+    rejection = page.request.post(
+        f"{BASE_URL}/api/contact",
+        headers={"Origin": BASE_URL, "Content-Type": "text/plain"},
+        data="{}",
+    )
+    assert rejection.status == 415, "contact API should reject non-JSON requests"
+
     assert_no_horizontal_overflow(page)
     assert console_errors == [], f"browser console errors: {console_errors}"
 

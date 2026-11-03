@@ -22,7 +22,7 @@ export default defineConfig({
           .items([
             S.listItem()
               .title("Site settings")
-              .child(S.document().schemaType("portfolioSiteSettings").documentId("portfolio.siteSettings")),
+              .child(S.document().schemaType("portfolioSiteSettings").documentId("portfolio-site-settings")),
             S.divider(),
             S.documentTypeListItem("portfolioProject").title("Projects"),
           ]),

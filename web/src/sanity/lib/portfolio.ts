@@ -20,9 +20,34 @@ const isRecord = (value: unknown): value is UnknownRecord => Boolean(value) && t
 const isString = (value: unknown): value is string => typeof value === "string";
 const isStringArray = (value: unknown): value is string[] => Array.isArray(value) && value.every(isString);
 const valueOr = (value: unknown, fallback: string) => isString(value) ? value : fallback;
-const arrayOr = <T>(value: unknown, fallback: readonly T[]) => Array.isArray(value) ? value as T[] : fallback;
+const validatedArray = <T>(value: unknown, isValid: (item: unknown) => item is T, fallback: readonly T[]): readonly T[] => (
+  Array.isArray(value) && value.every(isValid) ? value : fallback
+);
 const safeHttpsUrl = (value: unknown) => isString(value) && /^https:\/\/[^\s]+$/i.test(value) ? value : null;
 const safeCover = (value: unknown) => isString(value) && (value.startsWith("/project-covers/") || /^https:\/\/cdn\.sanity\.io\//i.test(value)) ? value : null;
+
+type ApproachStep = SiteContent["home"]["approachSteps"][number];
+type ExperienceEntry = SiteContent["about"]["experience"][number];
+type EducationEntry = SiteContent["about"]["education"][number];
+type LanguageEntry = SiteContent["about"]["languages"][number];
+type CertificationEntry = SiteContent["about"]["certifications"][number];
+type SkillGroup = SiteContent["about"]["skills"][number];
+
+const isApproachStep = (value: unknown): value is ApproachStep => isRecord(value)
+  && isString(value.phase) && isString(value.title) && isString(value.body);
+const isExperienceEntry = (value: unknown): value is ExperienceEntry => isRecord(value)
+  && isString(value.role) && isString(value.company) && isString(value.period)
+  && isString(value.location) && isStringArray(value.highlights);
+const isEducationEntry = (value: unknown): value is EducationEntry => isRecord(value)
+  && isString(value.degree) && isString(value.institution) && isString(value.period)
+  && isString(value.location) && (value.detail === null || isString(value.detail));
+const isLanguageEntry = (value: unknown): value is LanguageEntry => isRecord(value)
+  && isString(value.name) && isString(value.level)
+  && (value.proficiency === "Native" || value.proficiency === "C1" || value.proficiency === "B2");
+const isCertificationEntry = (value: unknown): value is CertificationEntry => isRecord(value)
+  && isString(value.name) && safeHttpsUrl(value.href) !== null;
+const isSkillGroup = (value: unknown): value is SkillGroup => isRecord(value)
+  && isString(value.group) && isStringArray(value.items);
 
 const localeKey = (locale: Locale) => locale === "de" ? "german" : "english";
 
@@ -133,7 +158,7 @@ const localizedContent = (
       workLabel: valueOr(home.workLabel, base.home.workLabel),
       methodLabel: valueOr(home.methodLabel, base.home.methodLabel),
       requestPath: base.home.requestPath,
-      approachSteps: arrayOr<SiteContent["home"]["approachSteps"][number]>(home.approachSteps, base.home.approachSteps),
+      approachSteps: validatedArray(home.approachSteps, isApproachStep, base.home.approachSteps),
     },
     common: mappedCommon,
     projectsPage: {
@@ -152,11 +177,11 @@ const localizedContent = (
       certificationsTitle: valueOr(about.certificationsTitle, base.about.certificationsTitle),
       learningTitle: valueOr(about.learningTitle, base.about.learningTitle),
       learning: valueOr(about.learning, base.about.learning),
-      experience: arrayOr<SiteContent["about"]["experience"][number]>(about.experience, base.about.experience),
-      education: arrayOr<SiteContent["about"]["education"][number]>(about.education, base.about.education),
-      languages: arrayOr<SiteContent["about"]["languages"][number]>(about.languages, base.about.languages),
-      certifications: arrayOr<SiteContent["about"]["certifications"][number]>(about.certifications, base.about.certifications),
-      skills: arrayOr<SiteContent["about"]["skills"][number]>(about.skills, base.about.skills),
+      experience: validatedArray(about.experience, isExperienceEntry, base.about.experience),
+      education: validatedArray(about.education, isEducationEntry, base.about.education),
+      languages: validatedArray(about.languages, isLanguageEntry, base.about.languages),
+      certifications: validatedArray(about.certifications, isCertificationEntry, base.about.certifications),
+      skills: validatedArray(about.skills, isSkillGroup, base.about.skills),
     },
     contact: mappedContact,
     projectCopy: [],

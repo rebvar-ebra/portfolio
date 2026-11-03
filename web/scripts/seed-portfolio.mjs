@@ -4,6 +4,24 @@ import { getSiteContent, projects } from "../src/content/site.ts";
 
 const isDryRun = process.argv.includes("--dry-run");
 
+const legacyDocumentIds = [
+  "portfolio.siteSettings",
+  ...projects.map((project) => `portfolio.project.${project.slug}`),
+];
+
+const legacyIdByDocumentId = new Map([
+  ["portfolio-site-settings", "portfolio.siteSettings"],
+  ...projects.map((project) => [
+    `portfolio-project-${project.slug}`,
+    `portfolio.project.${project.slug}`,
+  ]),
+]);
+
+const withoutSystemFields = (document, id) => Object.fromEntries([
+  ["_id", id],
+  ...Object.entries(document).filter(([key]) => !["_id", "_rev", "_createdAt", "_updatedAt"].includes(key)),
+]);
+
 const contactCopy = {
   en: {
     formTitle: "Send a message",
@@ -84,7 +102,9 @@ const contentByLocale = {
 
 const documents = [
   {
-    _id: "portfolio.siteSettings",
+    // Published documents whose IDs contain dots are hidden from anonymous
+    // Content Lake reads. Keep public portfolio IDs path-free.
+    _id: "portfolio-site-settings",
     _type: "portfolioSiteSettings",
     linkedin: contentByLocale.en.person.linkedin,
     english: localeDocument("en"),
@@ -100,7 +120,7 @@ const documents = [
     const germanCopy = Object.fromEntries(Object.entries(german).filter(([key]) => key !== "slug"));
 
     return {
-      _id: `portfolio.project.${project.slug}`,
+      _id: `portfolio-project-${project.slug}`,
       _type: "portfolioProject",
       slug: { _type: "slug", current: project.slug },
       order: project.order,
@@ -122,12 +142,62 @@ if (isDryRun) {
   console.log(JSON.stringify({ mode: "dry-run", count: documents.length, ids: documents.map(({ _id }) => _id) }, null, 2));
 } else {
   const client = getCliClient({ apiVersion: "2026-11-02" });
-  const results = [];
+  const allRelevantIds = [
+    ...legacyDocumentIds,
+    ...legacyDocumentIds.map((id) => `drafts.${id}`),
+    ...documents.map(({ _id }) => _id),
+    ...documents.map(({ _id }) => `drafts.${_id}`),
+  ];
+  const existingDocuments = await client.fetch(
+    "*[_id in $ids]",
+    { ids: allRelevantIds },
+    { perspective: "raw" },
+  );
+  const existingById = new Map(existingDocuments.map((document) => [document._id, document]));
+  const removableLegacyIds = [];
+  const migration = client.transaction();
 
-  for (const document of documents) {
-    const result = await client.createIfNotExists(document);
-    results.push(result._id);
+  for (const seedDocument of documents) {
+    const legacyId = legacyIdByDocumentId.get(seedDocument._id);
+    if (!legacyId) throw new Error(`Missing legacy mapping for ${seedDocument._id}`);
+
+    const currentDocument = existingById.get(seedDocument._id);
+    const legacyDocument = existingById.get(legacyId);
+    const legacyDraft = existingById.get(`drafts.${legacyId}`);
+    const currentDraft = existingById.get(`drafts.${seedDocument._id}`);
+
+    for (const candidate of [currentDocument, legacyDocument, legacyDraft, currentDraft]) {
+      if (candidate && candidate._type !== seedDocument._type) {
+        throw new Error(`Refusing to migrate ${candidate._id}: expected type ${seedDocument._type}`);
+      }
+    }
+    if (currentDocument && legacyDocument) {
+      throw new Error(`Migration conflict: both ${seedDocument._id} and ${legacyId} exist`);
+    }
+    if (currentDraft && legacyDraft) {
+      throw new Error(`Migration conflict: both drafts.${seedDocument._id} and drafts.${legacyId} exist`);
+    }
+
+    if (legacyDocument) {
+      migration.createOrReplace(withoutSystemFields(legacyDocument, seedDocument._id));
+      removableLegacyIds.push(legacyId);
+    } else {
+      migration.createIfNotExists(seedDocument);
+    }
+
+    if (legacyDraft) {
+      migration.createOrReplace(withoutSystemFields(legacyDraft, `drafts.${seedDocument._id}`));
+      removableLegacyIds.push(`drafts.${legacyId}`);
+    }
   }
 
-  console.log(JSON.stringify({ mode: "create-if-absent", count: results.length, ids: results }, null, 2));
+  removableLegacyIds.forEach((id) => migration.delete(id));
+  await migration.commit();
+
+  console.log(JSON.stringify({
+    mode: "create-if-absent",
+    count: documents.length,
+    ids: documents.map(({ _id }) => _id),
+    removedLegacyCount: removableLegacyIds.length,
+  }, null, 2));
 }

@@ -176,5 +176,30 @@ describe("createPortfolioRepository", () => {
     expect(result.content.navigation[1]).toEqual({ label: "Projekte", href: "/de/projects" });
     expect(result.content.projectCopy[0].title).toBe("CMS-Projekt");
   });
+
+  it("falls back when a nested home array contains malformed entries", async () => {
+    const english = localeDocument("en");
+    english.home = { ...english.home, approachSteps: [null] } as unknown as typeof english.home;
+    const repository = createPortfolioRepository(source({ settings: settings({ english }), projects: [project()] }));
+
+    const result = await repository.getPortfolio("en");
+
+    expect(result.content.home.approachSteps).toEqual(getSiteContent("en").home.approachSteps);
+  });
+
+  it("validates nested about entries while preserving intentional empty arrays", async () => {
+    const english = localeDocument("en");
+    english.about = {
+      ...english.about,
+      experience: [null],
+      skills: [],
+    } as unknown as typeof english.about;
+    const repository = createPortfolioRepository(source({ settings: settings({ english }), projects: [project()] }));
+
+    const result = await repository.getPortfolio("en");
+
+    expect(result.content.about.experience).toEqual(getSiteContent("en").about.experience);
+    expect(result.content.about.skills).toEqual([]);
+  });
 });
 

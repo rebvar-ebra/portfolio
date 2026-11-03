@@ -23,7 +23,7 @@ const projectLocaleFields = `
 `;
 
 export const portfolioQuery = defineQuery(`{
-  "settings": *[_type == "portfolioSiteSettings" && _id == "portfolio.siteSettings"][0]{
+  "settings": *[_type == "portfolioSiteSettings" && _id == "portfolio-site-settings"][0]{
     linkedin,
     english{${localeFields}},
     german{${localeFields}}

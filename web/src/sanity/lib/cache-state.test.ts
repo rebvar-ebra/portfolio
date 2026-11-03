@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { createFreshReadWindow } from "./cache-state";
+import { createFreshReadWindow, portfolioFreshReadWindow } from "./cache-state";
 
 describe("Sanity fresh-read window", () => {
   it("bypasses the CDN briefly after a portfolio webhook", () => {
@@ -10,5 +10,12 @@ describe("Sanity fresh-read window", () => {
     state.mark(100);
     expect(state.shouldBypass(10_099)).toBe(true);
     expect(state.shouldBypass(10_100)).toBe(false);
+  });
+
+  it("shares the portfolio window through the process-wide symbol registry", () => {
+    const key = Symbol.for("rebvar.portfolioFreshReadWindow");
+    const processState = globalThis as typeof globalThis & Record<PropertyKey, unknown>;
+
+    expect(processState[key]).toBe(portfolioFreshReadWindow);
   });
 });
