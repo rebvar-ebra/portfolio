@@ -66,20 +66,79 @@ const escapeHtml = (value: string) => value
   .replaceAll('"', "&quot;")
   .replaceAll("'", "&#39;");
 
-export const buildContactEmail = (submission: ContactSubmission) => ({
-  subject: `Portfolio contact: ${submission.subject}`,
-  replyTo: submission.email,
-  html: [
-    `<p><strong>Name:</strong> ${escapeHtml(submission.name)}</p>`,
-    `<p><strong>Email:</strong> ${escapeHtml(submission.email)}</p>`,
-    `<p><strong>Subject:</strong> ${escapeHtml(submission.subject)}</p>`,
-    `<p><strong>Message:</strong><br>${escapeHtml(submission.message).replaceAll("\n", "<br>")}</p>`,
-  ].join("\n"),
-  text: [
-    `Name: ${submission.name}`,
-    `Email: ${submission.email}`,
-    `Subject: ${submission.subject}`,
-    "",
-    submission.message,
-  ].join("\n"),
-});
+export const buildContactEmail = (submission: ContactSubmission) => {
+  const name = escapeHtml(submission.name);
+  const email = escapeHtml(submission.email);
+  const subject = escapeHtml(submission.subject);
+  const message = escapeHtml(submission.message).replaceAll("\n", "<br>");
+
+  return {
+    subject: `Portfolio contact: ${submission.subject}`,
+    replyTo: submission.email,
+    html: `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>New portfolio inquiry</title>
+  </head>
+  <body style="margin:0;padding:0;background-color:#f4f7f8;color:#07151d;font-family:Arial,Helvetica,sans-serif;">
+    <div style="display:none;max-height:0;overflow:hidden;opacity:0;">${name} sent a new message through rebvar.xyz.</div>
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;background-color:#f4f7f8;">
+      <tr>
+        <td align="center" style="padding:32px 16px;">
+          <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;max-width:640px;background-color:#ffffff;border:1px solid #d8e1e5;">
+            <tr>
+              <td style="height:8px;background-color:#ff6534;font-size:0;line-height:0;">&nbsp;</td>
+            </tr>
+            <tr>
+              <td style="padding:28px 32px;background-color:#07151d;color:#ffffff;">
+                <p style="margin:0 0 18px;font-size:15px;line-height:1;font-weight:700;color:#ff6534;">RE / BVAR</p>
+                <h1 style="margin:0;font-size:28px;line-height:1.2;font-weight:700;color:#ffffff;">New portfolio inquiry</h1>
+                <p style="margin:10px 0 0;font-size:15px;line-height:1.5;color:#b8c7ce;">A new message arrived through rebvar.xyz.</p>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:32px;">
+                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;background-color:#eef3f5;border-left:4px solid #ff6534;">
+                  <tr>
+                    <td style="padding:20px 22px;">
+                      <p style="margin:0 0 5px;font-size:19px;line-height:1.35;font-weight:700;color:#07151d;">${name}</p>
+                      <p style="margin:0;font-size:14px;line-height:1.5;color:#58707c;"><a href="mailto:${email}" style="color:#1b596f;text-decoration:underline;">${email}</a></p>
+                    </td>
+                  </tr>
+                </table>
+
+                <p style="margin:28px 0 7px;font-size:13px;line-height:1.4;font-weight:700;color:#58707c;">Subject</p>
+                <p style="margin:0;font-size:20px;line-height:1.45;font-weight:700;color:#07151d;">${subject}</p>
+
+                <p style="margin:28px 0 7px;font-size:13px;line-height:1.4;font-weight:700;color:#58707c;">Message</p>
+                <div style="padding:20px 22px;background-color:#f8fafb;border:1px solid #d8e1e5;font-size:16px;line-height:1.7;color:#20343e;overflow-wrap:anywhere;">${message}</div>
+
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top:28px;">
+                  <tr>
+                    <td style="background-color:#ff6534;">
+                      <a href="mailto:${email}" style="display:inline-block;padding:14px 22px;font-size:15px;line-height:1.2;font-weight:700;color:#07151d;text-decoration:none;">Reply to ${name}</a>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:18px 32px;border-top:1px solid #d8e1e5;font-size:12px;line-height:1.5;color:#70848d;">Sent securely from the contact form at rebvar.xyz.</td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>`,
+    text: [
+      `Name: ${submission.name}`,
+      `Email: ${submission.email}`,
+      `Subject: ${submission.subject}`,
+      "",
+      submission.message,
+    ].join("\n"),
+  };
+};

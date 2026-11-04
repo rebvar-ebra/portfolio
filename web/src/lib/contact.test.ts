@@ -57,6 +57,20 @@ describe("parseContactSubmission", () => {
 });
 
 describe("buildContactEmail", () => {
+  it("renders a branded email layout with a direct reply action", () => {
+    const parsed = parseContactSubmission(validPayload());
+    if (!parsed.ok) throw new Error("Expected valid fixture");
+
+    const email = buildContactEmail(parsed.value);
+
+    expect(email.html).toContain("<!doctype html>");
+    expect(email.html).toContain('<table role="presentation"');
+    expect(email.html).toContain("background-color:#07151d");
+    expect(email.html).toContain("New portfolio inquiry");
+    expect(email.html).toContain('href="mailto:ada@example.com"');
+    expect(email.html).toContain("Reply to Ada Lovelace");
+  });
+
   it("escapes every user-controlled HTML field and produces plain text", () => {
     const parsed = parseContactSubmission(validPayload({
       name: "<b>Ada</b>",
