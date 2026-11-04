@@ -13,6 +13,12 @@ rmSync(releaseRoot, { recursive: true, force: true });
 rmSync(archivePath, { force: true });
 mkdirSync(releaseRoot, { recursive: true });
 cpSync(standaloneRoot, releaseRoot, { recursive: true, verbatimSymlinks: true });
+const swcHelpersDestination = resolve(releaseRoot, "node_modules/@swc/helpers");
+mkdirSync(dirname(swcHelpersDestination), { recursive: true });
+cpSync(resolve(webRoot, "node_modules/@swc/helpers"), swcHelpersDestination, {
+  recursive: true,
+  dereference: true,
+});
 cpSync(resolve(webRoot, ".next/static"), resolve(releaseRoot, "web/.next/static"), { recursive: true });
 cpSync(resolve(webRoot, "public"), resolve(releaseRoot, "web/public"), { recursive: true });
 
